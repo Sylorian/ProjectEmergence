@@ -63,9 +63,10 @@ public static class ScenePropertyRegistry
         foreach (var kvp in ScenePropertyRegistry._bags)
         {
             string id = kvp.Key;
+            
+            Debug.Log(id);
             PropertyBag bag = kvp.Value;
-
-            // 假设 PropertyBag 有 Get<string> 方法
+            
             string currentName = bag.Get<string>("Name");
 
             if (currentName == name)

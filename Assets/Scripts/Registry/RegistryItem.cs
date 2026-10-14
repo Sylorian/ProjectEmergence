@@ -46,11 +46,11 @@ public class RegistryItem : MonoBehaviour
         
         ScenePropertyRegistry.Register(id, bag , this.gameObject); //数据表和对象表同时存入
         Debug.Log(this.id + "已注册");
-        
-        foreach (var pair in ScenePropertyRegistry.ErgodicGet(this.id))
-        {
-            Debug.Log(pair);
-        }
+        /*
+foreach (var pair in ScenePropertyRegistry.ErgodicGet(this.id))
+{
+    Debug.Log(pair);
+*/
         //控制台日志返回
     }
 
