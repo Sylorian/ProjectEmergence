@@ -49,6 +49,7 @@ public static class ScenePropertyRegistry
             }
         }
         
+        
         /* 提供对象属性包的遍历取出方法
          foreach (var pair in ScenePropertyRegistry.ErgodicGet("0001"))
             {
@@ -56,7 +57,26 @@ public static class ScenePropertyRegistry
             }
          */
     }
-    
+
+    public static string FindIdByName(string name)
+    {
+        foreach (var kvp in ScenePropertyRegistry._bags)
+        {
+            string id = kvp.Key;
+            PropertyBag bag = kvp.Value;
+
+            // 假设 PropertyBag 有 Get<string> 方法
+            string currentName = bag.Get<string>("Name");
+
+            if (currentName == name)
+            {
+                return id;
+            }
+        }
+        Debug.Log(name + "的 ID 是空的");
+        return null;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void Reset() => _bags.Clear(); // 动态释放
 }
