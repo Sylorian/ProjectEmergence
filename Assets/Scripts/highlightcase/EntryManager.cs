@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class EntyrManager : MonoBehaviour
+public class EntryManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField inputField;
     void OnEnable()
