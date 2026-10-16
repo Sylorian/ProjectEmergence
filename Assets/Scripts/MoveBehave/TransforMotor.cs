@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class TransforMotor : MonoBehaviour
 {
@@ -22,16 +22,15 @@ public class TransforMotor : MonoBehaviour
     public float angleThreshold = 0.1f;
 
     private Vector3 logicalPosition;
-    private float logicalAngleX;      // 改为 X 轴角度
+    private float logicalAngleX;      
     private Vector3 targetPosition;
-    private float targetAngleX;       // 改为 X 轴角度
+    private float targetAngleX;       
     private bool isMoving;
     private bool isRotating;
     private bool isPausing;
     private float nextPauseTime;
     private float pauseEndTime;
 
-    
     void Awake()
     {
         logicalPosition = transform.localPosition;
@@ -40,13 +39,11 @@ public class TransforMotor : MonoBehaviour
 
     void Update()
     {
-
-        
         // 移动和旋转都完成，直接应用精确位置并返回
         if (!isMoving && !isRotating)
         {
             transform.localPosition = logicalPosition;
-            transform.rotation = Quaternion.Euler(logicalAngleX, 0f, 0f);   // 绕 X 轴
+            transform.localRotation = Quaternion.Euler(logicalAngleX, 0f, 0f);   // 绕 X 轴
             return;
         }
 
@@ -109,7 +106,6 @@ public class TransforMotor : MonoBehaviour
 
         transform.localPosition = logicalPosition + shakeOffset;
         transform.localRotation = Quaternion.Euler(logicalAngleX + angleOffset, 0f, 0f);   // 绕 X 轴
-        
     }
 
     /// <summary>
@@ -132,6 +128,4 @@ public class TransforMotor : MonoBehaviour
         isPausing = false;
         nextPauseTime = Time.time + Random.Range(pauseIntervalMin, pauseIntervalMax);
     }
-    
-    
 }

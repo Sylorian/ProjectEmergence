@@ -42,12 +42,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: RoomObject
+  - name: HallwayObject
     uniqueID: 247940247
+    locked: 0
+  - name: BedroomObject
+    uniqueID: 2376221913
     locked: 0
   - name: TyperBox
     uniqueID: 1983702411
     locked: 0
   - name: TyperFrame
     uniqueID: 2553149585
+    locked: 0
+  - name: 
+    uniqueID: 1194286415
     locked: 0

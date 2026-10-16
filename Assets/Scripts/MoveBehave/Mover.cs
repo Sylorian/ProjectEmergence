@@ -30,20 +30,24 @@ public class Mover : MonoBehaviour
             var ul = ScenePropertyRegistry.GetInstance<Transform>("0004");
             var dr = ScenePropertyRegistry.GetInstance<Transform>("0003");
             var dl = ScenePropertyRegistry.GetInstance<Transform>("0002");
+            var core = ScenePropertyRegistry.GetInstance<Transform>("0001");
             IsOpen = !IsOpen;
             if (IsOpen)
             {
-                ur.GetComponent<TransforMotor>().MoveTo(new Vector3(16f, 0f, 5f), 0f);
-                ul.GetComponent<TransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f), 0f);
-                dr.GetComponent<TransforMotor>().MoveTo(new Vector3(16f, 0f, 5f), 0f);
-                dl.GetComponent<TransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f), 0f);
+                ur.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(16f, 0f, 5f));
+                ul.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f));
+                dr.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(16f, 0f, 5f));
+                dl.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f));
+                core.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-22f, 0f, 5f));
+
             }
             else
             {
-                ur.GetComponent<TransforMotor>().MoveTo(new Vector3(0f, 0f, 5f), 0f);
-                ul.GetComponent<TransforMotor>().MoveTo(new Vector3(0f, 0f, 5f), 0f);
-                dr.GetComponent<TransforMotor>().MoveTo(new Vector3(0f, 0f, 5f), 0f);
-                dl.GetComponent<TransforMotor>().MoveTo(new Vector3(0f, 0f, 5f), 0f);
+                ur.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
+                ul.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
+                dr.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
+                dl.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
+                core.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
             }
         }
     }
