@@ -1,12 +1,20 @@
 using UnityEngine;
 
-public class HorizontalScreenSwitcher : MonoBehaviour
+public class ScenesManager : MonoBehaviour
 {
     [Header("按顺序拖入每个界面的根节点")]
     public Transform[] screens;
 
+    [Header("初始界面")]
+    [Tooltip("列表中作为初始界面的索引，从 0 开始")]
+    public int startIndex = 0;
+
     [Header("平滑时间")]
     public float smoothTime = 0.25f;
+
+    [Header("键盘输入")]
+    public KeyCode prevKey = KeyCode.A;
+    public KeyCode nextKey = KeyCode.D;
 
     [Header("性能优化")]
     [Tooltip("是否自动激活/禁用附近界面")]
@@ -39,7 +47,6 @@ public class HorizontalScreenSwitcher : MonoBehaviour
     {
         if (screens == null || screens.Length == 0) return;
 
-        // 计算屏幕世界宽度
         if (autoCalculateScreenWidth && cam != null)
         {
             float worldHeight = cam.orthographicSize * 2f;
@@ -50,17 +57,15 @@ public class HorizontalScreenSwitcher : MonoBehaviour
             screenWidth = manualScreenWidth;
         }
 
-        // 初始化激活状态数组
         screenActiveStates = new bool[screens.Length];
 
-        currentIndex = 0;
-        targetX = screens[0].position.x;
+        // 初始界面由 startIndex 决定
+        currentIndex = Mathf.Clamp(startIndex, 0, screens.Length - 1);
+        targetX = screens[currentIndex].position.x;
 
-        // 相机初始位置
         var p = transform.position;
         transform.position = new Vector3(targetX, p.y, p.z);
 
-        // 初始化激活状态
         UpdateActivation(true);
     }
 
@@ -68,11 +73,9 @@ public class HorizontalScreenSwitcher : MonoBehaviour
     {
         if (screens == null || screens.Length == 0) return;
 
-        // 键盘输入
-        if (Input.GetKeyDown(KeyCode.A)) Prev();
-        if (Input.GetKeyDown(KeyCode.D)) Next();
+        if (Input.GetKeyDown(prevKey)) Prev();
+        if (Input.GetKeyDown(nextKey)) Next();
 
-        // 平滑移动相机
         float x = Mathf.SmoothDamp(
             transform.position.x,
             targetX,
@@ -83,9 +86,9 @@ public class HorizontalScreenSwitcher : MonoBehaviour
         var p = transform.position;
         transform.position = new Vector3(x, p.y, p.z);
 
-        // 性能优化：动态激活附近界面
         if (autoActivate) UpdateActivation(false);
     }
+
     public void Next() => MoveTo(currentIndex + 1);
     public void Prev() => MoveTo(currentIndex - 1);
 
@@ -97,14 +100,9 @@ public class HorizontalScreenSwitcher : MonoBehaviour
         currentIndex = index;
         targetX = screens[currentIndex].position.x;
 
-        // 目标切换时立即更新激活，保证移动过程中相邻界面可见
         if (autoActivate) UpdateActivation(false);
     }
 
-    /// <summary>
-    /// 根据相机当前位置，激活附近界面，禁用远处界面。
-    /// </summary>
-    /// <param name="force">强制刷新所有状态</param>
     void UpdateActivation(bool force)
     {
         if (screens == null || screens.Length == 0) return;
@@ -112,8 +110,6 @@ public class HorizontalScreenSwitcher : MonoBehaviour
             screenActiveStates = new bool[screens.Length];
 
         float camX = transform.position.x;
-
-        // 激活范围：当前页中心 ± (0.5 + activateBuffer) * 屏幕宽度
         float range = screenWidth * (activateBuffer + 0.5f);
 
         for (int i = 0; i < screens.Length; i++)
@@ -127,18 +123,6 @@ public class HorizontalScreenSwitcher : MonoBehaviour
                 screens[i].gameObject.SetActive(shouldActive);
                 screenActiveStates[i] = shouldActive;
             }
-        }
-    }
-
-    // 可选：在 Scene 视图画线，方便调试排列
-    void OnDrawGizmosSelected()
-    {
-        if (screens == null) return;
-        Gizmos.color = Color.green;
-        for (int i = 0; i < screens.Length; i++)
-        {
-            if (screens[i] == null) continue;
-            Gizmos.DrawWireCube(screens[i].position, new Vector3(screenWidth, 10f, 0f));
         }
     }
 }
