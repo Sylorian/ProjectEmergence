@@ -820,8 +820,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 227133249}
-  - component: {fileID: 227133250}
   - component: {fileID: 227133252}
+  - component: {fileID: 227133253}
   m_Layer: 10
   m_Name: TyperPapper
   m_TagString: Untagged
@@ -846,41 +846,6 @@ Transform:
   - {fileID: 1131333084}
   m_Father: {fileID: 573209801}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &227133250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227133248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d21a318e638dad449c57acc4c12e89d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 3
-  rotateSpeed: 180
-  targetPosition: {x: 0, y: -8, z: 0}
-  targetAngleZ: 0
-  positionThreshold: 0.01
-  angleThreshold: 0.1
-  enableShake: 1
-  shakeAmplitude: 0.1
-  shakeFrequency: 15
-  shakeRotationAmplitude: 4
-  enablePause: 1
-  pauseIntervalMin: 0.5
-  pauseIntervalMax: 1.5
-  pauseDurationMin: 0.1
-  pauseDurationMax: 0.2
-  logicalPosition: {x: 0, y: 0, z: 0}
-  logicalAngleZ: 0
-  shakeSeed: 0
-  nextPauseTime: 0
-  pauseEndTime: 0
-  isPausing: 0
-  isMoving: 0
-  isRotating: 0
 --- !u!114 &227133252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -904,6 +869,46 @@ MonoBehaviour:
   pauseDurationMax: 0.4
   positionThreshold: 0.01
   angleThreshold: 0.1
+--- !u!114 &227133253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227133248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538f4e4208df4285adf10ca9d93bb276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0006
+  boolProps:
+  - key: IsReady
+    value: 1
+  - key: IsHighlight
+    value: 0
+  - key: IsShow
+    value: 1
+  - key: IsPlay
+    value: 0
+  - key: IsAudio
+    value: 0
+  - key: IsBagpack
+    value: 0
+  stringProps:
+  - key: Name
+    value: 
+  - key: Info
+    value: 
+  - key: Clue
+    value: 
+  - key: PrivateLabel
+    value: 
+  - key: PublicLabel
+    value: 
+  floatProps:
+  - key: HowMany
+    value: 1
 --- !u!43 &290988703
 Mesh:
   m_ObjectHideFlags: 0
@@ -1310,7 +1315,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &333118517
 Transform:
@@ -1588,7 +1593,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &452979263
 Transform:
@@ -2094,6 +2099,50 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &498087805
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 498087806}
+  - component: {fileID: 498087807}
+  m_Layer: 10
+  m_Name: Mover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &498087806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498087805}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 573209801}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &498087807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498087805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808195801f77274c98c1927db9239b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &558147796
 GameObject:
   m_ObjectHideFlags: 0
@@ -2338,6 +2387,7 @@ Transform:
   - {fileID: 810764760}
   - {fileID: 227133249}
   - {fileID: 333118517}
+  - {fileID: 498087806}
   m_Father: {fileID: 1842124747}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578304927
@@ -3469,13 +3519,14 @@ GameObject:
   - component: {fileID: 849222193}
   - component: {fileID: 849222194}
   - component: {fileID: 849222195}
+  - component: {fileID: 849222196}
   m_Layer: 0
   m_Name: BoxCore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 0
 --- !u!4 &849222193
 Transform:
   m_ObjectHideFlags: 0
@@ -3583,6 +3634,29 @@ MonoBehaviour:
   floatProps:
   - key: HowMany
     value: 1
+--- !u!114 &849222196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849222192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729feba7d2565484086dafbbe9d551d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  rotateSpeed: 180
+  shakeAmplitude: 0.1
+  shakeFrequency: 20
+  shakeRotationAmplitude: 5
+  pauseIntervalMin: 0.5
+  pauseIntervalMax: 1.5
+  pauseDurationMin: 0.1
+  pauseDurationMax: 0.4
+  positionThreshold: 0.01
+  angleThreshold: 0.1
 --- !u!1 &877730938
 GameObject:
   m_ObjectHideFlags: 0
@@ -3762,12 +3836,13 @@ GameObject:
   - component: {fileID: 968428891}
   - component: {fileID: 968428892}
   - component: {fileID: 968428893}
+  - component: {fileID: 968428894}
   m_Layer: 0
   m_Name: BoxDownleft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &968428891
 Transform:
@@ -3876,6 +3951,29 @@ MonoBehaviour:
   floatProps:
   - key: HowMany
     value: 1
+--- !u!114 &968428894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968428890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729feba7d2565484086dafbbe9d551d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 30
+  rotateSpeed: 90
+  shakeAmplitude: 0.1
+  shakeFrequency: 5
+  shakeRotationAmplitude: 5
+  pauseIntervalMin: 0
+  pauseIntervalMax: 0
+  pauseDurationMin: 0
+  pauseDurationMax: 0
+  positionThreshold: 0
+  angleThreshold: 0
 --- !u!1 &973583151
 GameObject:
   m_ObjectHideFlags: 0
@@ -4309,7 +4407,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1074793135
 Transform:
@@ -5277,7 +5375,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1344739704
 Transform:
@@ -5359,7 +5457,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1366444614
 Transform:
@@ -5677,7 +5775,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1518231882
 Transform:
@@ -5758,17 +5856,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729feba7d2565484086dafbbe9d551d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotateSpeed: 180
+  moveSpeed: 30
+  rotateSpeed: 90
   shakeAmplitude: 0.1
-  shakeFrequency: 20
+  shakeFrequency: 5
   shakeRotationAmplitude: 5
-  pauseIntervalMin: 0.5
-  pauseIntervalMax: 1.5
-  pauseDurationMin: 0.1
-  pauseDurationMax: 0.4
-  positionThreshold: 0.01
-  angleThreshold: 0.1
+  pauseIntervalMin: 0
+  pauseIntervalMax: 0
+  pauseDurationMin: 0
+  pauseDurationMax: 0
+  positionThreshold: 0
+  angleThreshold: 0
 --- !u!114 &1518231885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5826,7 +5924,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1565496659
 Transform:
@@ -5947,17 +6045,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 729feba7d2565484086dafbbe9d551d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotateSpeed: 180
+  moveSpeed: 30
+  rotateSpeed: 90
   shakeAmplitude: 0.1
-  shakeFrequency: 20
+  shakeFrequency: 5
   shakeRotationAmplitude: 5
-  pauseIntervalMin: 0.5
-  pauseIntervalMax: 1.5
-  pauseDurationMin: 0.1
-  pauseDurationMax: 0.4
-  positionThreshold: 0.01
-  angleThreshold: 0.1
+  pauseIntervalMin: 0
+  pauseIntervalMax: 0
+  pauseDurationMin: 0
+  pauseDurationMax: 0
+  positionThreshold: 0
+  angleThreshold: 0
 --- !u!1 &1593503565
 GameObject:
   m_ObjectHideFlags: 0
@@ -7766,12 +7864,13 @@ GameObject:
   - component: {fileID: 1921987682}
   - component: {fileID: 1921987683}
   - component: {fileID: 1921987684}
+  - component: {fileID: 1921987685}
   m_Layer: 0
   m_Name: BoxUpright
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1921987682
 Transform:
@@ -7781,7 +7880,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921987681}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7880,6 +7979,29 @@ MonoBehaviour:
   floatProps:
   - key: HowMany
     value: 1
+--- !u!114 &1921987685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1921987681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729feba7d2565484086dafbbe9d551d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 30
+  rotateSpeed: 90
+  shakeAmplitude: 0.1
+  shakeFrequency: 5
+  shakeRotationAmplitude: 0
+  pauseIntervalMin: 0
+  pauseIntervalMax: 0
+  pauseDurationMin: 0
+  pauseDurationMax: 0
+  positionThreshold: 0
+  angleThreshold: 0
 --- !u!1 &1930984314
 GameObject:
   m_ObjectHideFlags: 0
@@ -8414,7 +8536,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2020685536
 Transform:

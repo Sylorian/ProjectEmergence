@@ -1,0 +1,4 @@
+repository "SceneBuilt@tj_sylorian@cloud.cn"
+  path "/"
+    br "/main"
+    co "/main"

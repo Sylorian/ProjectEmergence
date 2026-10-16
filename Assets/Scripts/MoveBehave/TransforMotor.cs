@@ -34,7 +34,7 @@ public class TransforMotor : MonoBehaviour
     
     void Awake()
     {
-        logicalPosition = transform.position;
+        logicalPosition = transform.localPosition;
         logicalAngleX = transform.eulerAngles.x;   // 取 X 轴
     }
 
@@ -45,7 +45,7 @@ public class TransforMotor : MonoBehaviour
         // 移动和旋转都完成，直接应用精确位置并返回
         if (!isMoving && !isRotating)
         {
-            transform.position = logicalPosition;
+            transform.localPosition = logicalPosition;
             transform.rotation = Quaternion.Euler(logicalAngleX, 0f, 0f);   // 绕 X 轴
             return;
         }
@@ -107,8 +107,8 @@ public class TransforMotor : MonoBehaviour
             angleOffset = nr * shakeRotationAmplitude;
         }
 
-        transform.position = logicalPosition + shakeOffset;
-        transform.rotation = Quaternion.Euler(logicalAngleX + angleOffset, 0f, 0f);   // 绕 X 轴
+        transform.localPosition = logicalPosition + shakeOffset;
+        transform.localRotation = Quaternion.Euler(logicalAngleX + angleOffset, 0f, 0f);   // 绕 X 轴
         
     }
 
@@ -123,7 +123,7 @@ public class TransforMotor : MonoBehaviour
         // 如果当前没有在移动，从当前位置开始
         if (!isMoving && !isRotating)
         {
-            logicalPosition = transform.position;
+            logicalPosition = transform.localPosition;
             logicalAngleX = transform.eulerAngles.x;
         }
 
