@@ -36,6 +36,8 @@ namespace Hyperplasia.Core.Flow.States
                 case InputCommand.Backspace:
                     _c.Buffer.Backspace();
                     break;
+                default:
+                    break;
             }
         }
 

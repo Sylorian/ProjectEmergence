@@ -24,7 +24,9 @@ namespace Hyperplasia.Core.Flow
         Submit,
         Cancel,
         Backspace,
-
+        MoveLeft,
+        MoveRight,
+        Interact
     }
 
     public static class TextNormalizer

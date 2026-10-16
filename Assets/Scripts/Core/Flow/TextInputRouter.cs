@@ -46,10 +46,13 @@ namespace Hyperplasia.Core.Flow
             // 时钟倒退时清除冷却，防止冷却时间异常
             if (now < _lastInputTime) _lastInputTime = float.NegativeInfinity;
 
-            bool commandAllowed = !deliveredText && (now - _lastInputTime >= InputCooldown);
+            bool cooldown = now - _lastInputTime < InputCooldown;
 
             foreach (InputCommand cmd in Enum.GetValues(typeof(InputCommand)))
             {
+                // 移动指令不用冷却
+                cooldown = cmd != InputCommand.MoveLeft && cmd != InputCommand.MoveRight && cooldown;
+                bool commandAllowed = !deliveredText && !cooldown;
                 if (commandAllowed && _source.ConsumeKey(cmd))
                 {
                     _lastInputTime = now;

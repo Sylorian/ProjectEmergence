@@ -38,9 +38,12 @@ namespace Hyperplasia.Presentation.Input
             return key switch
             {
                 InputCommand.Confirm => kb.spaceKey.wasPressedThisFrame,
-                InputCommand.Submit => kb.enterKey.wasPressedThisFrame,
+                InputCommand.Submit => kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame,
                 InputCommand.Cancel => kb.escapeKey.wasPressedThisFrame,
                 InputCommand.Backspace => kb.backspaceKey.isPressed,
+                InputCommand.MoveLeft => kb.leftArrowKey.isPressed || kb.aKey.isPressed,
+                InputCommand.MoveRight => kb.rightArrowKey.isPressed || kb.dKey.isPressed,
+                InputCommand.Interact => kb.fKey.wasPressedThisFrame,
                 _ => false,
             };
         }

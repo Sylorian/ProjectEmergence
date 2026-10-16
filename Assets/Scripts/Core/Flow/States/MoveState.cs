@@ -23,6 +23,20 @@ namespace Hyperplasia.Core.Flow.States
 
         public void OnCommand(InputCommand command)
         {
+            switch (command)
+            {
+                case InputCommand.Confirm:
+                    break;
+                case InputCommand.Submit:
+                    _c.TransitionTo(InputState.FirstWord);
+                    break;
+                case InputCommand.Cancel:
+                    break;
+                case InputCommand.Backspace:
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void Exit()
