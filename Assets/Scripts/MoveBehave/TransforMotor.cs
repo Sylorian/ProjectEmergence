@@ -115,7 +115,7 @@ public class TransforMotor : MonoBehaviour
     /// <summary>
     /// 移动到指定位置并绕 X 轴旋转到指定角度，自动包含抖动和停顿效果。
     /// </summary>
-    void MoveTo(Vector3 position, float angleX)
+    public void MoveTo(Vector3 position, float angleX)
     {
         targetPosition = position;
         targetAngleX = angleX;

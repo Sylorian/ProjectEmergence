@@ -11,7 +11,7 @@ public class ForTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Backslash))
         {
-            var mover = Re;
+            var mover = ScenePropertyRegistry.GetInstance<Transform>("00060");
             paper_position = !paper_position;
             Debug.Log("触发");
             if (paper_position)
