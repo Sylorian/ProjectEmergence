@@ -15,6 +15,7 @@ namespace Hyperplasia.Presentation
         public ITextInputSource Source { get; private set; }
 
         public DraftLineView DraftLine;
+        public CharacterMover characterMover;
 
         private void Awake()
         {
@@ -38,6 +39,7 @@ namespace Hyperplasia.Presentation
             Controller = new InputController(Source);
 
             if (DraftLine != null) DraftLine.Controller = Controller;
+            if (characterMover != null) characterMover.SetController(Controller);
         }
 
         private void EnsureInput()

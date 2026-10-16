@@ -34,6 +34,12 @@ namespace Hyperplasia.Core.Flow.States
                     break;
                 case InputCommand.Backspace:
                     break;
+                case InputCommand.MoveLeft:
+                    _c.RequestMove(-1f);
+                    break;
+                case InputCommand.MoveRight:
+                    _c.RequestMove(1f);
+                    break;
                 default:
                     break;
             }
