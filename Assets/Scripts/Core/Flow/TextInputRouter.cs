@@ -7,6 +7,8 @@ namespace Hyperplasia.Core.Flow
     {
         bool DeviceReady { get; }
         string ConsumeCommittedText();
+        /// <summary>返回 1..9 的候选序号键；没有则返回 0。</summary>
+        int ConsumeDigit();
         bool ConsumeKey(InputCommand key);
     }
 
@@ -20,7 +22,7 @@ namespace Hyperplasia.Core.Flow
 
         private float _lastInputTime;
 
-        public TextInputRouter(ITextInputSource source, float inputCooldown = 0.1f)
+        public TextInputRouter(ITextInputSource source, float inputCooldown = 0.2f)
         {
             _source = source ?? throw new ArgumentNullException(nameof(source));
             InputCooldown = inputCooldown;
@@ -28,6 +30,8 @@ namespace Hyperplasia.Core.Flow
 
         public event Action<string> TextEntered;
         public event Action<InputCommand> CommandPressed;
+        /// <summary>数字键（1..9）按下，用于选择候选词。</summary>
+        public event Action<int> DigitPressed;
 
         public ITextInputSource Source => _source;
         public bool LastFrameDeliveredText { get; private set; }
@@ -42,9 +46,17 @@ namespace Hyperplasia.Core.Flow
                 _lastInputTime = now;
                 TextEntered?.Invoke(text);
             }
-            
+
             // 时钟倒退时清除冷却，防止冷却时间异常
             if (now < _lastInputTime) _lastInputTime = float.NegativeInfinity;
+
+            // 数字键选词：即时响应，不吃冷却
+            int digit = _source.ConsumeDigit();
+            if (digit > 0)
+            {
+                _lastInputTime = now;
+                DigitPressed?.Invoke(digit);
+            }
 
             bool cooldown = now - _lastInputTime < InputCooldown;
 
