@@ -6,11 +6,12 @@ public static class ScenePropertyRegistry
     private static readonly Dictionary<string, PropertyBag> _bags = new(); // 初始化创建静态注册表，挂在一个空对象上做初始化处理。此表存数据
     private static readonly Dictionary<string, GameObject> _instance = new(); //初始化创建对象引用表，此表存对象引用用于映射
 
-    public static void Register(string id , PropertyBag bag , GameObject instance) // 并行注册方法，注入字典的是这个PropertyBag对象，属性是规定好的
+    public static void Register(string id , PropertyBag bag , GameObject instance = null) // 并行注册方法，注入字典的是这个PropertyBag对象，属性是规定好的
     {
         if (string.IsNullOrEmpty(id)) return; // 防止重复写入
         ScenePropertyRegistry._bags[id] = bag;
-        ScenePropertyRegistry._instance[id] = instance; // 同 ID 覆盖
+        if (instance != null)
+            ScenePropertyRegistry._instance[id] = instance; // 同 ID 覆盖
     }
 
     public static void Unregister(string id) // 并行注销方法

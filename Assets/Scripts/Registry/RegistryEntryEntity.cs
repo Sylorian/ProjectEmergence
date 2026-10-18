@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class RegistryItem : MonoBehaviour
+public class RegistryEntryEntity : MonoBehaviour
 {
     //Unity编辑器内的写入会初始化覆盖，所以程序可以任意调复写方法，重置会自动初始化
     [Serializable] private struct BoolEntry   { public string key; public bool   value; } // 是否可被检查
