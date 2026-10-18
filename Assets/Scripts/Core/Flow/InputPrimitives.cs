@@ -127,6 +127,7 @@ namespace Hyperplasia.Core.Flow
         InputState StateId { get; }
         void Enter();
         void OnText(string txt);
+        void OnDigit(int digit);
         void OnCommand(InputCommand cmd);
         void Exit();
     }
@@ -135,6 +136,7 @@ namespace Hyperplasia.Core.Flow
     {
         public bool DeviceReady => false;
         public string ConsumeCommittedText() { return string.Empty; }
+        public int ConsumeDigit() { return 0; }
         public bool ConsumeKey(InputCommand key) { return false; }
     }
 }
