@@ -1,7 +1,7 @@
 using Hyperplasia.Core.Flow;
 using UnityEngine;
 
-namespace Hyperplasia.Runtime
+namespace Hyperplasia.World
 {
     /// <summary>
     /// 探索状态下的角色左右移动。挂在角色上。
