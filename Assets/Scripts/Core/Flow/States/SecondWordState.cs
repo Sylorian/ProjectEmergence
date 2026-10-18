@@ -71,9 +71,15 @@ namespace Hyperplasia.Core.Flow.States
                         _c.ResetTarget();
                         Refresh();
                     }
+                    else if (_c.TargetWord != null)
+                    {
+                        // 先撤销第二词（移除芯片），仍留在 SecondWord
+                        _c.ResetTarget();
+                        Refresh();
+                    }
                     else
                     {
-                        // Draft 为空 → 回退到 FirstWord，并清除 Confirmed
+                        // Draft 为空且没有第二词 → 回退到 FirstWord，清除第一词芯片
                         _c.SetCandidates(NoCandidates);
                         _c.SetHighlight(NoIds);
                         _c.TransitionTo(InputState.FirstWord);

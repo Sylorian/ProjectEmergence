@@ -13,7 +13,7 @@ namespace Hyperplasia.Presentation
 {
     /// <summary>
     /// 组装层：加载 JSON → GameDatabase / GameState / WordLibrary / ResolveEngine → InputController → 驱动 UI。
-    /// 候选词用 CandidateTemplate 克隆；已确认词用 CommittedWordView 克隆到 ConfirmedRoot（输入框左边）。
+    /// 候选词用 CandidateTemplate 克隆；已确认词用 CommittedTemplate 克隆到 ConfirmedRoot（输入框左边）。
     /// </summary>
     [DisallowMultipleComponent]
     public class GameBootstrap : MonoBehaviour
@@ -41,8 +41,8 @@ namespace Hyperplasia.Presentation
         public ITextInputSource Source { get; private set; }
 
         /// <summary>
-        /// 状态 2 高亮目标变化（实体 id）。Presentation 是独立 asmdef，不能引用默认程序集里的
-        /// ScenePropertyRegistry / HighlightAnimate，因此这里只抛事件，由场景侧（默认程序集）订阅。
+        /// 状态 2 高亮目标变化（实体 id）。现在与 ScenePropertyRegistry / HighlightAnimate
+        /// 同属 Hyperplasia.Gameplay，订阅方可以直接驱动高亮。
         /// </summary>
         public event Action<IReadOnlyList<string>> HighlightChanged;
 

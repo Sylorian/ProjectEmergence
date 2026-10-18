@@ -77,8 +77,7 @@ namespace Hyperplasia.Core.Flow
 
             if (!string.IsNullOrEmpty(c.Pinyin))
             {
-                List<WordCandidate> list;
-                if (!_byPinyin.TryGetValue(c.Pinyin, out list))
+                if (!_byPinyin.TryGetValue(c.Pinyin, out List<WordCandidate> list))
                 {
                     list = new List<WordCandidate>();
                     _byPinyin[c.Pinyin] = list;
