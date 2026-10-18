@@ -4,7 +4,7 @@ using System.Text;
 using Hyperplasia.Core.Flow;
 using UnityEngine.InputSystem;
 
-namespace Hyperplasia.Presentation.Input
+namespace Hyperplasia.Input
 {
     /// <summary>
     /// 用 Input System 的 Keyboard 采集「已提交文本」与数字键。

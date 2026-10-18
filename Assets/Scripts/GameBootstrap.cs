@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
 using Hyperplasia.Core.Flow;
-using Hyperplasia.Presentation.Input;
-using Hyperplasia.Presentation.Ui;
+using Hyperplasia.Input;
+using Hyperplasia.View;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Hyperplasia.Presentation
+namespace Hyperplasia.Runtime
 {
     /// <summary>
     /// 组装层：加载 JSON → GameDatabase / GameState / WordLibrary / ResolveEngine → InputController → 驱动 UI。

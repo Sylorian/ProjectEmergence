@@ -3,7 +3,7 @@ using Hyperplasia.Core.Flow;
 using TMPro;
 using UnityEngine;
 
-namespace Hyperplasia.Presentation.Ui
+namespace Hyperplasia.View
 {
     /// <summary>
     /// 输入框草稿行：`&gt; 草稿 + 光标`。

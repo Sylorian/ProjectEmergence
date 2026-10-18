@@ -1,7 +1,7 @@
 using Hyperplasia.Core.Flow;
 using UnityEngine;
 
-namespace Hyperplasia.Presentation.Input
+namespace Hyperplasia.Input
 {
     public static class TextInputSources
     {

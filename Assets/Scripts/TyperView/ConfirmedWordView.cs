@@ -3,13 +3,13 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 
-namespace Hyperplasia.Presentation.Ui
+namespace Hyperplasia.View
 {
-    public class WordCandidateView : MonoBehaviour
+    public class ConfirmedWordView : MonoBehaviour
     {
         public Button Button;
         public TextMeshProUGUI Label;
-        
+
         public void Subscribe(UnityAction action)
         {
             if (Button != null) Button.onClick.AddListener(action);
