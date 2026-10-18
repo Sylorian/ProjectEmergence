@@ -38,7 +38,7 @@ public class Mover : MonoBehaviour
                 ul.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f));
                 dr.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(16f, 0f, 5f));
                 dl.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-16f, 0f, 5f));
-                core.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(-22f, 0f, 5f));
+                core.GetComponent<TransforMotor>().MoveTo(new Vector3(-22f, 0f, 5f),180f);
 
             }
             else
@@ -47,7 +47,7 @@ public class Mover : MonoBehaviour
                 ul.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
                 dr.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
                 dl.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
-                core.GetComponent<BoxTransforMotor>().MoveTo(new Vector3(0f, 0f, 5f));
+                core.GetComponent<TransforMotor>().MoveTo(new Vector3(0f, 0f, 5f),180f);
             }
         }
     }

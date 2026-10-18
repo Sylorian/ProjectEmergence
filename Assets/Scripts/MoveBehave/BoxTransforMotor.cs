@@ -4,40 +4,42 @@ public class BoxTransforMotor : MonoBehaviour
 {
     [Header("速度")]
     public float moveSpeed = 5f;
+
     private Vector3 logicalPosition;
-    private float logicalAngleX;      
     private Vector3 targetPosition;
-    private float targetAngleX;       
     private bool isMoving;
-    private bool isPausing;
-    private float nextPauseTime;
-    private float pauseEndTime;
+
+    private const float MoveEpsilon = 0.0005f;
 
     void Awake()
     {
         logicalPosition = transform.localPosition;
-        logicalAngleX = transform.eulerAngles.x;   // 取 X 轴
     }
 
     void Update()
     {
-        // 移动和旋转都完成，直接应用精确位置并返回
-        if (!isMoving)
+        if (!isMoving) return;
+
+        logicalPosition = Vector3.MoveTowards(
+            logicalPosition, targetPosition, moveSpeed * Time.deltaTime);
+
+        if ((logicalPosition - targetPosition).sqrMagnitude <= MoveEpsilon * MoveEpsilon)
         {
-            transform.localPosition = logicalPosition;
-            return;
+            logicalPosition = targetPosition;
+            isMoving = false;
         }
+
+        transform.localPosition = logicalPosition;
     }
 
-    public void MoveTo(Vector3 position)
+    public void MoveTo(Vector3 localPosition)
     {
-        targetPosition = position;
-
-        // 如果当前没有在移动，从当前位置开始
-        if (!isMoving)
-        {
-            logicalPosition = transform.localPosition;
-        }
+        targetPosition = localPosition;
         isMoving = true;
+    }
+
+    public void Stop()
+    {
+        isMoving = false;
     }
 }

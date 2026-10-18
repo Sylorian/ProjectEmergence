@@ -48,12 +48,21 @@ TagManager:
   - name: BedroomObject
     uniqueID: 2376221913
     locked: 0
+  - name: KitchenObject
+    uniqueID: 1194286415
+    locked: 0
+  - name: LivingroomObject
+    uniqueID: 2362721663
+    locked: 0
+  - name: StoreroomObject
+    uniqueID: 1822405543
+    locked: 0
+  - name: WashroomObject
+    uniqueID: 3571027037
+    locked: 0
   - name: TyperBox
     uniqueID: 1983702411
     locked: 0
   - name: TyperFrame
     uniqueID: 2553149585
-    locked: 0
-  - name: 
-    uniqueID: 1194286415
     locked: 0
