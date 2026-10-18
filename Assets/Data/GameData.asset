@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 699b09a0a67429a4585f6663231f2bb5, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  entities:
+  - id: 0
+    name: "\u53F0\u706F"
+    pinyin: taideng
+    room: "\u5367\u5BA4"
+    tags:
+    - "\u7535\u5B50"
+    - "\u5149\u6E90"
+    - "\u5173\u95ED"
+    clue: "\u684C\u4E0A\u7684\u53F0\u706F\uFF0C\u4F3C\u4E4E\u5DF2\u7ECF\u7528\u4E86\u5F88\u4E45\u4E86\uFF0C\u4F46\u5B83\u7684\u4E3B\u4EBA\u6682\u65F6\u4E5F\u6CA1\u6709\u66F4\u6362\u7684\u8BA1\u5212\u3002\u53EF\u4EE5\u6253\u5F00\u6216\u8005\u5173\u95ED\uFF0C\u7531\u6253\u51FA\u7684\u53E5\u5B50\u8BF4\u4E86\u7B97\u3002"
+  verbs:
+  - id: 0
+    name: "\u7838"
+    pinyin: za
+  - id: 0
+    name: "\u6572"
+    pinyin: qiao
+  - id: 1
+    name: "\u6253\u5F00"
+    pinyin: dakai
+  - id: 2
+    name: "\u5173\u95ED"
+    pinyin: guanbi
+  rules:
+  - verb_id: 1
+    target_id: 0
+    target_tag: "\u5173\u95ED"
+    tag_exist: 1
+    tag_changed: "\u6253\u5F00"
+    effect: turn_on_lamp
+    feedback: "\u706F\u5F00\u4E86\u3002"
+    feedback_fail: "\u5B83\u5DF2\u7ECF\u662F\u6253\u5F00\u7684\u72B6\u6001\u4E86\uFF0C\u4E0D\u662F\u5417\uFF1F\u591A\u6B64\u4E00\u4E3E\u4E0D\u4F1A\u5E26\u6765\u597D\u5904\u3002"
+  - verb_id: 2
+    target_id: 0
+    target_tag: "\u6253\u5F00"
+    tag_exist: 1
+    tag_changed: "\u5173\u95ED"
+    effect: turn_off_lamp
+    feedback: "\u706F\u5173\u4E0A\u4E86\uFF0C\u5E8A\u7684\u56DB\u5468\u9677\u5165\u4E86\u9ED1\u6697\u3002"
+    feedback_fail: "\u4E3A\u4EC0\u4E48\u8981\u5173\u6389\u672C\u5C31\u6CA1\u6709\u6253\u5F00\u7684\u53F0\u706F\u5462\uFF1F\u5B83\u770B\u8D77\u6765\u8FD8\u6709\u4EC0\u4E48\u5173\u95ED\u7684\u4F59\u5730\u5417\uFF1F"
