@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e2bea9bd5d2865a41addf293fc6e51ec
+guid: 3cea87876cdfe3c489c0c3eec691a1d1
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - FZNew BaoSong-Z12S
+  - ZhaohuaTypeWriter
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

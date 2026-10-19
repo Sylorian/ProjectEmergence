@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 911a2575d7fdabd4398b452419cbb047
+guid: 64b26c32e692ae34e99b90c730dcfdf0
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - SimSun
+  - Special Elite
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
