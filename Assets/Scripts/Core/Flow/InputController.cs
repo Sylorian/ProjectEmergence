@@ -28,7 +28,7 @@ namespace Hyperplasia.Core.Flow
         public event Action<InputState, InputState> StateChanged;
         public event Action<string> FeedbackRaised;
         public event Action<IReadOnlyList<WordCandidate>> CandidatesChanged;
-        public event Action<IReadOnlyList<string>> HighlightChanged;
+        public event Action<IReadOnlyList<int>> HighlightChanged;
         public event Action<WordCandidate> FirstWordCommitted;
         public event Action<WordCandidate> TargetCommitted;
         public event Action<string> InspectionRaised;
@@ -46,8 +46,8 @@ namespace Hyperplasia.Core.Flow
         public WordCandidate TargetWord { get; private set; }
         public ResolveResult LastResolve { get; private set; }
 
-        public string FirstWordId { get { return FirstWord != null ? FirstWord.Id : null; } }
-        public string TargetId { get { return TargetWord != null ? TargetWord.Id : null; } }
+        public int FirstWordId => FirstWord?.Id ?? -1;
+        public int TargetId => TargetWord?.Id ?? -1;
 
         public InputController(ITextInputSource source = null)
             : this(source, null, null, null, null)
@@ -125,9 +125,9 @@ namespace Hyperplasia.Core.Flow
             CandidatesChanged?.Invoke(_candidates);
         }
 
-        public void SetHighlight(IReadOnlyList<string> ids)
+        public void SetHighlight(IReadOnlyList<int> ids)
         {
-            HighlightChanged?.Invoke(ids ?? Array.Empty<string>());
+            HighlightChanged?.Invoke(ids ?? Array.Empty<int>());
         }
 
         public void CommitFirstWord(WordCandidate word)

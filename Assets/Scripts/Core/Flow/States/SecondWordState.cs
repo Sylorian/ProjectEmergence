@@ -12,7 +12,7 @@ namespace Hyperplasia.Core.Flow.States
     public sealed class SecondWordState : IInputState
     {
         private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly string[] NoIds = Array.Empty<string>();
+        private static readonly int[] NoIds = Array.Empty<int>();
 
         private readonly InputController _c;
         private readonly List<WordCandidate> _candidates = new List<WordCandidate>();
@@ -96,11 +96,8 @@ namespace Hyperplasia.Core.Flow.States
         {
             _candidates.Clear();
             List<WordCandidate> found = _c.Library.GetCandidates(_c.Buffer.Text);
-            if (found != null)
-            {
-                for (int i = 0; i < found.Count; i++)
-                    if (found[i].Kind == WordKind.Noun) _candidates.Add(found[i]);
-            }
+            foreach (var candidate in found)
+                if (candidate.Kind == WordKind.Noun) _candidates.Add(candidate);
 
             if (_selected >= _candidates.Count) _selected = 0;
             _c.SetCandidates(_candidates);
@@ -108,7 +105,7 @@ namespace Hyperplasia.Core.Flow.States
 
         private void RefreshHighlight()
         {
-            var ids = new List<string>();
+            var ids = new List<int>();
             List<Entity> targets = _c.Resolver.GetCandidateTargets(_c.FirstWordId, _c.World);
             for (int i = 0; i < targets.Count; i++)
                 if (IsReachable(targets[i].Id)) ids.Add(targets[i].Id);
@@ -142,15 +139,11 @@ namespace Hyperplasia.Core.Flow.States
         }
 
         /// <summary>当前可打：在背包里、已生成、或就在玩家所在房间。</summary>
-        private bool IsReachable(string id)
+        private bool IsReachable(int id)
         {
-            if (id == null) return false;
-            if (_c.World.HasItem(id)) return true;
-            if (_c.World.IsSpawned(id)) return true;
-
-            Entity e;
-            if (!_c.Database.EntityById.TryGetValue(id, out e)) return false;
-            return e.Room != null && e.Room == _c.World.CurrentRoom;
+            if (id < 0) return false;
+            if (!_c.Database.EntityById.TryGetValue(id, out Entity e)) return false;
+            return e.Room == _c.World.CurrentRoom;
         }
     }
 }

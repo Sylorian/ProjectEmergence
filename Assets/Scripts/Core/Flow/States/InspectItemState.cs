@@ -11,7 +11,7 @@ namespace Hyperplasia.Core.Flow.States
     public sealed class InspectItemState : IInputState
     {
         private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly string[] NoIds = Array.Empty<string>();
+        private static readonly int[] NoIds = Array.Empty<int>();
 
         private readonly InputController _c;
 
@@ -59,24 +59,27 @@ namespace Hyperplasia.Core.Flow.States
         private string BuildLabel()
         {
             WordCandidate w = _c.FirstWord;
-            Entity e;
-            if (w == null || !_c.Database.EntityById.TryGetValue(w.Id, out e)) return null;
+            if (!_c.Database.EntityById.TryGetValue(w.Id, out Entity e)) return null;
 
             var sb = new StringBuilder();
             sb.Append(e.Name);
             sb.Append('：');
-            if (e.Tags == null || e.Tags.Length == 0)
+            if (e.Tags == null || e.Tags.Count == 0)
             {
                 sb.Append("（无标签）");
             }
             else
             {
-                for (int i = 0; i < e.Tags.Length; i++)
+                foreach (string tag in e.Tags)
                 {
-                    if (i > 0) sb.Append('、');
-                    sb.Append(e.Tags[i]);
+                    sb.Append("[");
+                    sb.Append(tag);
+                    sb.Append("]");
                 }
             }
+
+            sb.Append('\n');
+            sb.Append(e.Clue);
             return sb.ToString();
         }
     }

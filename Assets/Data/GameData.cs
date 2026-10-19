@@ -60,7 +60,7 @@ public class GameDataEntity_rules
     /// </summary>
     public int target_id;
     /// <summary>
-    /// 动作目标物品需要持有的标签，用|连接。没有则留空。
+    /// 动作目标物品需要持有的标签。没有则留空。
     /// </summary>
     public string target_tag;
     /// <summary>
@@ -72,7 +72,11 @@ public class GameDataEntity_rules
     /// </summary>
     public string tag_changed;
     /// <summary>
-    /// 动作产生的除改变标签以外的效果的英文名，采用蛇形命名法`snake_case`。没有则留空。
+    /// 动作所需物品，即玩家背包中必须持有的物品。没有则留空。
+    /// </summary>
+    public string required_item;
+    /// <summary>
+    /// 动作产生的除改变标签以外的效果的英文名，采用蛇形命名法snake_case。没有则留空。
     /// </summary>
     public string effect;
     /// <summary>

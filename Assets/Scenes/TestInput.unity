@@ -859,7 +859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b2f93b0008f2a440aa740dfb9035154, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameData: {fileID: 4900000, guid: be51aacd14cc4e442943d0657e4fd2b4, type: 3}
+  GameData: {fileID: 11400000, guid: 90ef0d02601474e42ad3c2941d0337b0, type: 2}
   DraftLine: {fileID: 1651748433}
   HistoryText: {fileID: 2084150393}
   CandidatesRoot: {fileID: 327883447}

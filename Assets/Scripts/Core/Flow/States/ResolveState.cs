@@ -1,3 +1,5 @@
+using Hyperplasia.Core.Data;
+
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
@@ -22,8 +24,7 @@ namespace Hyperplasia.Core.Flow.States
 
             ResolveResult result = _c.Resolver.Resolve(_c.FirstWordId, _c.TargetId, _c.World);
             _c.SetLastResolve(result);
-            _c.World.CountWord();
-            _c.World.Ink -= _c.Database.Config.InkCostPerWord;
+            _c.World.Ink -= GameConfig.INK_COST_PER_SENTENCE;
             _c.RaiseFeedback(result.Feedback);
 
             // 结束 → 回状态 0

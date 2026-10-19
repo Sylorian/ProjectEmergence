@@ -9,7 +9,7 @@ namespace Hyperplasia.Core.Flow.States
     public sealed class ExploreState : IInputState
     {
         private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly string[] NoIds = Array.Empty<string>();
+        private static readonly int[] NoIds = Array.Empty<int>();
 
         private readonly InputController _c;
 

@@ -18,9 +18,9 @@ namespace Hyperplasia.Core.Flow
         public readonly string Text;
         public readonly string Pinyin;
         public readonly WordKind Kind;
-        public readonly string Id;
+        public readonly int Id;
 
-        public WordCandidate(string text, string pinyin, WordKind kind, string id)
+        public WordCandidate(string text, string pinyin, WordKind kind, int id = 0)
         {
             Text = text;
             Pinyin = pinyin;
@@ -53,8 +53,6 @@ namespace Hyperplasia.Core.Flow
             foreach (Verb v in db.Verbs)
             {
                 Add(new WordCandidate(v.Name, Norm(v.Pinyin), WordKind.Verb, v.Id));
-                for (int i = 0; i < v.Aliases.Length; i++)
-                    Add(new WordCandidate(v.Aliases[i], Norm(v.AliasPinyinAt(i)), WordKind.Verb, v.Id));
             }
 
             foreach (Entity e in db.Entities)

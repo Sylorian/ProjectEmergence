@@ -6,6 +6,7 @@ using Hyperplasia.Core.Flow;
 using Hyperplasia.Input;
 using Hyperplasia.View;
 using Hyperplasia.World;
+using Hyperplasia.Bridge;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ namespace Hyperplasia.Runtime
     {
         [Header("数据")]
         [Tooltip("处理后的数据（含拼音），如 game_data_sample_processed.json")]
-        public TextAsset GameData;
+        public GameData GameData;
 
         [Header("界面")]
         public DraftLineView DraftLine;
@@ -45,14 +46,14 @@ namespace Hyperplasia.Runtime
         /// 状态 2 高亮目标变化（实体 id）。现在与 ScenePropertyRegistry / HighlightAnimate
         /// 同属 Hyperplasia.Gameplay，订阅方可以直接驱动高亮。
         /// </summary>
-        public event Action<IReadOnlyList<string>> HighlightChanged;
+        public event Action<IReadOnlyList<int>> HighlightChanged;
 
-        public IReadOnlyList<string> CurrentHighlight { get { return _highlight; } }
+        public IReadOnlyList<int> CurrentHighlight { get { return _highlight; } }
 
         private readonly List<WordCandidateView> _candidateButtons = new List<WordCandidateView>();
         private readonly List<ConfirmedWordView> _confirmedChips = new List<ConfirmedWordView>();
         private readonly List<string> _history = new List<string>();
-        private readonly List<string> _highlight = new List<string>();
+        private readonly List<int> _highlight = new List<int>();
 
         private void Awake()
         {
@@ -124,10 +125,10 @@ namespace Hyperplasia.Runtime
         private GameDatabase LoadDatabase()
         {
             var loader = new GameDataLoader();
-            if (GameData != null && !string.IsNullOrEmpty(GameData.text))
-                return loader.Load(GameData.text);
+            if (GameData != null)
+                return loader.Load(GameData);
 
-            Debug.LogWarning("[GameBootstrap] 未配置 GameData(TextAsset)，使用空数据库。");
+            Debug.LogWarning("[GameBootstrap] 未配置 GameData，使用空数据库。");
             return new GameDatabase();
         }
 
@@ -157,7 +158,7 @@ namespace Hyperplasia.Runtime
             RefreshConfirmedWords();
         }
 
-        private void OnHighlightChanged(IReadOnlyList<string> ids)
+        private void OnHighlightChanged(IReadOnlyList<int> ids)
         {
             _highlight.Clear();
             if (ids != null)
