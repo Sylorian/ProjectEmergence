@@ -30,17 +30,27 @@ public class ScenesManager : MonoBehaviour
     public float manualScreenWidth = 19.2f;
 
     private int currentIndex;
+    private int moveorderIndex;
     private float targetX;
     private float velocityX;
     private Vector2 swipeStart;
     private float screenWidth;
     private bool[] screenActiveStates;
+    private bool hasTriggered;
     private Camera cam;
+    private string[] sortinglayer = new string[]
+    {
+         "BedroomObject","StoreroomObject","LivingroomObject","HallwayObject","KitchenObject","WashroomObject"
+    };
+
+    private int[] sortnum = new int[] { -3, -2, -1, 0, 1, 2 };
+    private int sortstart = 3;
 
     void Awake()
     {
         cam = GetComponent<Camera>();
         if (cam == null) cam = Camera.main;
+        
     }
 
     void Start()
@@ -71,10 +81,29 @@ public class ScenesManager : MonoBehaviour
 
     void Update()
     {
+        var Character_ = ScenePropertyRegistry.GetInstance<Transform>("01");
+        
         if (screens == null || screens.Length == 0) return;
 
-        if (Input.GetKeyDown(prevKey)) Prev();
-        if (Input.GetKeyDown(nextKey)) Next();
+        //if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        if (!hasTriggered && Character_.transform.localPosition.x<-18.1f) 
+        {
+            hasTriggered = true;
+            Character_.transform.localPosition = new Vector3(13.5f, -2f, 1f);
+            Prev();
+            BoxMove();
+
+        }
+        if (!hasTriggered && Character_.transform.localPosition.x>18.1f) 
+        {
+            hasTriggered = true;
+            Character_.transform.localPosition = new Vector3(-13.5f, -2f, 1f);
+            Next();
+            BoxMove();
+        }
+        //if (Input.GetKeyDown(nextKey)) Next();
+
+        
 
         float x = Mathf.SmoothDamp(
             transform.position.x,
@@ -89,6 +118,15 @@ public class ScenesManager : MonoBehaviour
         if (autoActivate) UpdateActivation(false);
     }
 
+    public void BoxMove()
+    {
+        Transform Get(string id) => ScenePropertyRegistry.GetInstance<Transform>(id);
+
+        Get("0005").GetComponent<boxmover>().Begin();
+        Get("0004").GetComponent<boxmover>().Begin();
+        Get("0003").GetComponent<boxmover>().Begin();
+        Get("0002").GetComponent<boxmover>().Begin();
+    }
     public void Next() => MoveTo(currentIndex + 1);
     public void Prev() => MoveTo(currentIndex - 1);
 
@@ -98,9 +136,17 @@ public class ScenesManager : MonoBehaviour
 
         index = Mathf.Clamp(index, 0, screens.Length - 1);
         currentIndex = index;
+        ScenePropertyRegistry.GetInstance<Transform>("01").GetComponent<SpriteRenderer>().sortingLayerName = sortinglayer[index];
+
         targetX = screens[currentIndex].position.x;
 
         if (autoActivate) UpdateActivation(false);
+        if (hasTriggered)
+        {
+            hasTriggered = !hasTriggered;
+        }
+
+
     }
 
     void UpdateActivation(bool force)
@@ -124,5 +170,8 @@ public class ScenesManager : MonoBehaviour
                 screenActiveStates[i] = shouldActive;
             }
         }
+        
     }
 }
+
+
