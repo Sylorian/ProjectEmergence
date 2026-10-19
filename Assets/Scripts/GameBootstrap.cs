@@ -197,7 +197,7 @@ namespace Hyperplasia.Runtime
                 WordCandidateView c = _candidateButtons[i];
                 if (c.gameObject.activeSelf != active) c.gameObject.SetActive(active);
                 if (!active) continue;
-                c.SetLabel((i + 1) + ". " + list[i].Text);
+                c.SetLabel(list[i].Text);
             }
         }
 
