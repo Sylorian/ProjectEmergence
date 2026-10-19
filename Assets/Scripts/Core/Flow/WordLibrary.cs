@@ -85,7 +85,7 @@ namespace Hyperplasia.Core.Flow
         }
 
         /// <summary>按输入串取候选：先按拼音前缀，命中则返回；否则退回中文名前缀。最多 max 个。</summary>
-        public List<WordCandidate> GetCandidates(string typed, int max = 9)
+        public List<WordCandidate> GetCandidates(string typed, int max = 6)
         {
             var result = new List<WordCandidate>();
             string q = Norm(typed);

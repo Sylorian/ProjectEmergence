@@ -36,10 +36,10 @@ namespace Hyperplasia.Bridge
                 var ent = new Entity(
                     e.id,
                     e.name,
+                    e.pinyin,
                     e.room,
-                    e.clue,
                     e.tags,
-                    e.pinyin);
+                    e.clue);
                 db.Entities.Add(ent);
                 db.EntityById[ent.Id] = ent;
             }
