@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ScenesManager : MonoBehaviour
@@ -29,28 +31,32 @@ public class ScenesManager : MonoBehaviour
     [Tooltip("手动设置屏幕世界宽度，autoCalculateScreenWidth = false 时生效")]
     public float manualScreenWidth = 19.2f;
 
-    private int currentIndex;
-    private int moveorderIndex;
-    private float targetX;
-    private float velocityX;
-    private Vector2 swipeStart;
-    private float screenWidth;
-    private bool[] screenActiveStates;
-    private bool hasTriggered;
-    private Camera cam;
+    // 角色越界阈值
+    private const float BoundaryX = 18.1f;
+
+    // 箱子对象 ID
+    private readonly string[] boxIds = { "0005", "0004", "0003", "0002" };
+
     private string[] sortinglayer = new string[]
     {
-         "BedroomObject","StoreroomObject","LivingroomObject","HallwayObject","KitchenObject","WashroomObject"
+        "BedroomObject","StoreroomObject","LivingroomObject","HallwayObject","KitchenObject","WashroomObject"
     };
 
     private int[] sortnum = new int[] { -3, -2, -1, 0, 1, 2 };
     private int sortstart = 3;
 
+    private int currentIndex;
+    private float targetX;
+    private float velocityX;
+    private float screenWidth;
+    private bool[] screenActiveStates;
+    private bool isTransitioning;   // 切换流程进行中，防止重复触发
+    private Camera cam;
+
     void Awake()
     {
         cam = GetComponent<Camera>();
         if (cam == null) cam = Camera.main;
-        
     }
 
     void Start()
@@ -69,7 +75,6 @@ public class ScenesManager : MonoBehaviour
 
         screenActiveStates = new bool[screens.Length];
 
-        // 初始界面由 startIndex 决定
         currentIndex = Mathf.Clamp(startIndex, 0, screens.Length - 1);
         targetX = screens[currentIndex].position.x;
 
@@ -81,30 +86,30 @@ public class ScenesManager : MonoBehaviour
 
     void Update()
     {
-        var Character_ = ScenePropertyRegistry.GetInstance<Transform>("01");
-        
         if (screens == null || screens.Length == 0) return;
 
-        //if (Input.GetKeyDown(KeyCode.Alpha1)) 
-        if (!hasTriggered && Character_.transform.localPosition.x<-18.1f) 
+        var character = ScenePropertyRegistry.GetInstance<Transform>("01");
+
+        // 角色穿墙检测：启动完整的「右移 → 切屏 → 左移」协程
+        if (!isTransitioning && character != null)
         {
-            hasTriggered = true;
-            Character_.transform.localPosition = new Vector3(13.5f, -2f, 1f);
-            Prev();
-            BoxMove();
+            float cx = character.localPosition.x;
 
+            if (cx < -BoundaryX)
+            {
+                // 从左侧穿出 → 从右侧进入 → 相机左移一个界面
+                character.localPosition = new Vector3(13.5f, -2f, 1f);
+                StartCoroutine(TransitionRoutine(-1));
+            }
+            else if (cx > BoundaryX)
+            {
+                // 从右侧穿出 → 从左侧进入 → 相机右移一个界面
+                character.localPosition = new Vector3(-13.5f, -2f, 1f);
+                StartCoroutine(TransitionRoutine(+1));
+            }
         }
-        if (!hasTriggered && Character_.transform.localPosition.x>18.1f) 
-        {
-            hasTriggered = true;
-            Character_.transform.localPosition = new Vector3(-13.5f, -2f, 1f);
-            Next();
-            BoxMove();
-        }
-        //if (Input.GetKeyDown(nextKey)) Next();
 
-        
-
+        // 相机平滑
         float x = Mathf.SmoothDamp(
             transform.position.x,
             targetX,
@@ -118,15 +123,93 @@ public class ScenesManager : MonoBehaviour
         if (autoActivate) UpdateActivation(false);
     }
 
+    /// <summary>
+    /// 切换流程：
+    ///   1) 所有箱子先向右移动并等待完成
+    ///   2) 相机切换到目标界面并等待到位
+    ///   3) 所有箱子最后向左返回
+    /// </summary>
+    private IEnumerator TransitionRoutine(int direction)
+    {
+        if (isTransitioning) yield break;
+        isTransitioning = true;
+
+        List<boxmover> movers = GetBoxMovers();
+        float timeout = MaxOneWayDuration(movers) + 1f;
+
+        // ── 1. 先执行：箱子向右移动 ──
+        for (int i = 0; i < movers.Count; i++) movers[i].BeginRight();
+        yield return WaitUntilOrTimeout(() => AreAllRightFinished(movers), timeout);
+
+        // ── 2. 再执行：相机切换界面 ──
+        MoveTo(currentIndex + direction);
+        yield return WaitUntilOrTimeout(
+            () => Mathf.Abs(transform.position.x - targetX) <= 0.01f,
+            5f);
+
+        var p = transform.position;
+        transform.position = new Vector3(targetX, p.y, p.z);
+        velocityX = 0f;
+
+        // ── 3. 最后执行：箱子向左返回 ──
+        for (int i = 0; i < movers.Count; i++) movers[i].BeginLeft();
+        yield return WaitUntilOrTimeout(() => AreAllLeftFinished(movers), timeout);
+
+        isTransitioning = false;
+    }
+
+    private IEnumerator WaitUntilOrTimeout(System.Func<bool> condition, float timeout)
+    {
+        float t = 0f;
+        while (!condition() && t < timeout)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private static bool AreAllRightFinished(List<boxmover> movers)
+    {
+        for (int i = 0; i < movers.Count; i++)
+            if (movers[i] != null && !movers[i].IsRightFinished) return false;
+        return true;
+    }
+
+    private static bool AreAllLeftFinished(List<boxmover> movers)
+    {
+        for (int i = 0; i < movers.Count; i++)
+            if (movers[i] != null && movers[i].IsMovingLeft) return false;
+        return true;
+    }
+
+    private static float MaxOneWayDuration(List<boxmover> movers)
+    {
+        float d = 1f;
+        for (int i = 0; i < movers.Count; i++)
+            if (movers[i] != null) d = Mathf.Max(d, movers[i].oneWayDuration);
+        return d;
+    }
+
+    private List<boxmover> GetBoxMovers()
+    {
+        var list = new List<boxmover>();
+        for (int i = 0; i < boxIds.Length; i++)
+        {
+            var tr = ScenePropertyRegistry.GetInstance<Transform>(boxIds[i]);
+            if (tr == null) continue;
+            var bm = tr.GetComponent<boxmover>();
+            if (bm != null) list.Add(bm);
+        }
+        return list;
+    }
+
+    /// <summary>公开接口：让所有箱子执行一次完整流程（不移动相机）</summary>
     public void BoxMove()
     {
-        Transform Get(string id) => ScenePropertyRegistry.GetInstance<Transform>(id);
-
-        Get("0005").GetComponent<boxmover>().Begin();
-        Get("0004").GetComponent<boxmover>().Begin();
-        Get("0003").GetComponent<boxmover>().Begin();
-        Get("0002").GetComponent<boxmover>().Begin();
+        var movers = GetBoxMovers();
+        for (int i = 0; i < movers.Count; i++) movers[i].Begin();
     }
+
     public void Next() => MoveTo(currentIndex + 1);
     public void Prev() => MoveTo(currentIndex - 1);
 
@@ -136,17 +219,17 @@ public class ScenesManager : MonoBehaviour
 
         index = Mathf.Clamp(index, 0, screens.Length - 1);
         currentIndex = index;
-        ScenePropertyRegistry.GetInstance<Transform>("01").GetComponent<SpriteRenderer>().sortingLayerName = sortinglayer[index];
+
+        var character = ScenePropertyRegistry.GetInstance<Transform>("01");
+        if (character != null && index < sortinglayer.Length)
+        {
+            var sr = character.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.sortingLayerName = sortinglayer[index];
+        }
 
         targetX = screens[currentIndex].position.x;
 
         if (autoActivate) UpdateActivation(false);
-        if (hasTriggered)
-        {
-            hasTriggered = !hasTriggered;
-        }
-
-
     }
 
     void UpdateActivation(bool force)
@@ -170,8 +253,5 @@ public class ScenesManager : MonoBehaviour
                 screenActiveStates[i] = shouldActive;
             }
         }
-        
     }
 }
-
-
