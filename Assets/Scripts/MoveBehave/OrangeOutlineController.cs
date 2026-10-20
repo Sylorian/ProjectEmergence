@@ -25,13 +25,13 @@ public class OrangeOutlineController : MonoBehaviour
 
     void OnEnable()
     {
-        GameBootstrap.Instance.Session.Typer.OrangeOutline += ApplyOutline;
+        GameBootstrap.TyperEngine.OrangeOutline += ApplyOutline;
         Invoke(nameof(ApplyOutline), 0f);
     }
 
     void OnDisable()
     {
-        GameBootstrap.Instance.Session.Typer.OrangeOutline -= ApplyOutline;
+        GameBootstrap.TyperEngine.OrangeOutline -= ApplyOutline;
         CancelInvoke(nameof(ApplyOutline));
     }
 
@@ -82,7 +82,7 @@ public class OrangeOutlineController : MonoBehaviour
     void OnDestroy()
     {
         // 保险起见，如果 OnDisable 未正常执行也能退订
-        GameBootstrap.Instance.Session.Typer.OrangeOutline -= ApplyOutline;
+        GameBootstrap.TyperEngine.OrangeOutline -= ApplyOutline;
 
         // 清理动态创建的材质实例，防止内存泄漏
         if (_outlineMaterial != null)
