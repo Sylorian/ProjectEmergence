@@ -16,7 +16,6 @@ namespace Hyperplasia.Core.Flow
         public string CurrentRoom { get { return _currentRoom; } set { _currentRoom = value; } }
         private float _ink;
         public float Ink { get { return _ink; } set { _ink = value; } }
-        private readonly List<string> _history = new List<string>();
 
         /// <summary>初始实体状态取自 GameDatabase；startRoom 缺省取第一个实体的房间。</summary>
         public GameSession(GameDatabase db)
@@ -28,9 +27,19 @@ namespace Hyperplasia.Core.Flow
         }
 
         // —— inventory ——
+        public bool CollectToInventory(int id)
+        {
+            if (Database.TryGetEntity(id, out var entity))
+            {
+                Database.RemoveEntity(id);
+                AddInventoryItem(id, entity);
+                return true;
+            }
+            return false;
+        }
         public bool HasInventoryItem(int id) { return _inventory.ContainsKey(id); }
-        public void AddInventoryItem(int id, Entity entity) { _inventory[id] = entity; }
-        public void RemoveInventoryItem(int id) { _inventory.Remove(id); }
+        private void AddInventoryItem(int id, Entity entity) { _inventory[id] = entity; }
+        private void RemoveInventoryItem(int id) { _inventory.Remove(id); }
         public IEnumerable<int> Inventory { get { return _inventory.Keys; } }
     }
 }

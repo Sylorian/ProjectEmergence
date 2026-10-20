@@ -8,7 +8,7 @@ namespace Hyperplasia.Input
 {
     /// <summary>
     /// 用 Input System 的 Keyboard 采集「已提交文本」与数字键。
-    /// IME 关闭，因此键入的是拼音字母；数字键 1..9 单独走 ConsumeDigit（选候选）。
+    /// IME 关闭，因此键入的是拼音字母。
     /// </summary>
     public sealed class InputSystemTextSource : ITextInputSource, IDisposable
     {
@@ -33,12 +33,6 @@ namespace Hyperplasia.Input
             string s = _pending.ToString();
             _pending.Clear();
             return s;
-        }
-
-        public int ConsumeDigit()
-        {
-            EnsureSubscribed();
-            return _pendingDigits.Count > 0 ? _pendingDigits.Dequeue() : 0;
         }
 
         public bool ConsumeKey(InputCommand key)
@@ -92,13 +86,8 @@ namespace Hyperplasia.Input
 
         private void OnTextInput(char c)
         {
-            // 数字键 1..9 作为「选第 N 个候选」，不进草稿
-            if (c >= '1' && c <= '9')
-            {
-                _pendingDigits.Enqueue(c - '0');
-                return;
-            }
-            _pending.Append(c);
+            if (char.IsLetter(c))
+                _pending.Append(c);
         }
     }
 }

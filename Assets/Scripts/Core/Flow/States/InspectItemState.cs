@@ -31,10 +31,6 @@ namespace Hyperplasia.Core.Flow.States
         {
         }
 
-        public void OnDigit(int digit)
-        {
-        }
-
         public void OnCommand(InputCommand command)
         {
             switch (command)

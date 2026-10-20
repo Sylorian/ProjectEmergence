@@ -192,5 +192,19 @@ namespace Hyperplasia.Core.Data
         public readonly Dictionary<int, Verb> VerbById = new Dictionary<int, Verb>();
         public readonly List<Rule> Rules = new List<Rule>();
         public readonly Dictionary<int, List<Rule>> RulesByVerb = new Dictionary<int, List<Rule>>();
+
+        public bool TryGetEntity(int id, out Entity entity) => EntityById.TryGetValue(id, out entity);
+        public bool TryGetVerb(int id, out Verb verb) => VerbById.TryGetValue(id, out verb);
+        public bool TryGetRule(int verbId, out List<Rule> rules) => RulesByVerb.TryGetValue(verbId, out rules);
+        public bool RemoveEntity(int id)
+        {
+            if (EntityById.TryGetValue(id, out var entity))
+            {
+                EntityById.Remove(id);
+                Entities.Remove(entity);
+                return true;
+            }
+            return false;
+        }
     }
 }

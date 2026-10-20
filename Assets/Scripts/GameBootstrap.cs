@@ -112,6 +112,7 @@ namespace Hyperplasia.Runtime
             Session.Typer.FirstWordCommitted += Typer.OnFirstWord;
             Session.Typer.SecondWordCommitted += Typer.OnSecondWord;
             Session.Typer.CandidatesChanged += Typer.OnCandidatesChanged;
+            Session.Typer.InspectionRaised += Typer.OnInspection;
         }
 
         private void UnhookTyperEvents()
@@ -121,6 +122,7 @@ namespace Hyperplasia.Runtime
             Session.Typer.FirstWordCommitted -= Typer.OnFirstWord;
             Session.Typer.SecondWordCommitted -= Typer.OnSecondWord;
             Session.Typer.CandidatesChanged -= Typer.OnCandidatesChanged;
+            Session.Typer.InspectionRaised -= Typer.OnInspection;
         }
     }
 }

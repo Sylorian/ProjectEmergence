@@ -40,7 +40,7 @@ namespace Hyperplasia.View
             if (inspecting)
             {
                 // 输入框位置显示物品标签
-                _sb.Append(Controller.TyperEngine.Inspection);
+                _sb.Append("Inspecting...");
             }
             else if (editing)
             {

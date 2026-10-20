@@ -48,6 +48,7 @@ namespace Hyperplasia.Core.Flow
         public void RaiseFeedback(string text)
         {
             Feedback = text;
+            AddFeedback(text);
             FeedbackRaised?.Invoke(text);
         }
 
@@ -111,6 +112,7 @@ namespace Hyperplasia.Core.Flow
         public void RaiseInspection(string text)
         {
             Inspection = text;
+            AddFeedback(text);
             InspectionRaised?.Invoke(text);
         }
 

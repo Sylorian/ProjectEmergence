@@ -30,7 +30,6 @@ namespace Hyperplasia.Core.Flow
             Router = new TextInputRouter(source ?? new NullTextInputSource());
             Router.TextEntered += HandleText;
             Router.CommandPressed += HandleCommand;
-            Router.DigitPressed += HandleDigit;
 
             Session = session;
             TyperEngine = Session.Typer;
@@ -60,8 +59,7 @@ namespace Hyperplasia.Core.Flow
 
         private void HandleText(string text) { _current.OnText(text); }
         private void HandleCommand(InputCommand cmd) { _current.OnCommand(cmd); }
-        private void HandleDigit(int digit) { _current.OnDigit(digit); }
-
+    
         public void TransitionTo(InputState target)
         {
             if (_current.StateId == target) return;
@@ -70,12 +68,6 @@ namespace Hyperplasia.Core.Flow
             _current = _states[(int)target];
             StateChanged?.Invoke(from, target);
             _current.Enter();
-        }
-
-        /// <summary>UI 点击候选按钮时调用；复用数字键通道（index 从 0 开始）。</summary>
-        public void SelectCandidate(int index)
-        {
-            if (index >= 0) _current.OnDigit(index + 1);
         }
     }
 }

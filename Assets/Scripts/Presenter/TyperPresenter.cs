@@ -43,12 +43,13 @@ namespace Hyperplasia.Presenter
         }
 
         #region event_handlers
+        /// <summary>
+        /// 处理来自 TyperEngine 的反馈事件。
+        /// </summary>
         public void OnFeedback(string text)
         {
             if (string.IsNullOrEmpty(text)) return;
-            Engine?.AddFeedback(text);
-            var history = Engine?.GetHistory() ?? Array.Empty<string>();
-            UIBase.SetText(HistoryText, string.Join("\n", history));
+            RefreshHistory();
         }
 
         public void OnFirstWord(WordCandidate word)
@@ -66,6 +67,12 @@ namespace Hyperplasia.Presenter
         public void OnCandidatesChanged(IReadOnlyList<WordCandidate> candidates)
         {
             RefreshCandidates(candidates);
+        }
+
+        public void OnInspection(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            RefreshHistory();
         }
         #endregion
 
@@ -124,14 +131,19 @@ namespace Hyperplasia.Presenter
             }
             _candidateChips.Clear();
 
-            var count = 0;
             foreach (var candidate in candidates)
             {
                 WordCandidateView chip = GameObject.Instantiate(CandidateTemplate, CandidatesRoot);
-                chip.SetLabel(++count + ". " + candidate.Text);
+                chip.SetLabel(candidate.Text);
                 UIBase.SetActive(chip, true);
                 _candidateChips.Add(chip);
             }
+        }
+
+        private void RefreshHistory()
+        {
+            var history = Engine?.GetHistory() ?? Array.Empty<string>();
+            UIBase.SetText(HistoryText, string.Join("\n", history));
         }
     }
 }

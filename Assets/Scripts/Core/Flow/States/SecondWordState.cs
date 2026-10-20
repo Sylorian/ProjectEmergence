@@ -40,11 +40,6 @@ namespace Hyperplasia.Core.Flow.States
             Refresh();
         }
 
-        public void OnDigit(int digit)
-        {
-            Select(digit - 1);
-        }
-
         public void OnCommand(InputCommand command)
         {
             switch (command)
