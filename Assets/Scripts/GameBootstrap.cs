@@ -72,6 +72,7 @@ namespace Hyperplasia.Runtime
             Controller = new InputController(Source, Session);
 
             Typer.Engine = Session.Typer;
+            Typer.Controller = Controller;
 
             if (Typer.Engine == null || Typer.DraftLine == null)
                 Debug.LogError("[GameBootstrap] Typer/World 引用不完整，请检查 Inspector 绑定。");

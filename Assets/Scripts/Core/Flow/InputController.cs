@@ -51,15 +51,10 @@ namespace Hyperplasia.Core.Flow
             Router.Poll(now);
         }
 
-        public void RequestCharacterMove(float axis)
-        {
-            if (axis > 0f) MoveAxis = 1f;
-            else if (axis < 0f) MoveAxis = -1f;
-        }
-
         private void HandleText(string text) { _current.OnText(text); }
+
         private void HandleCommand(InputCommand cmd) { _current.OnCommand(cmd); }
-    
+
         public void TransitionTo(InputState target)
         {
             if (_current.StateId == target) return;
@@ -69,5 +64,18 @@ namespace Hyperplasia.Core.Flow
             StateChanged?.Invoke(from, target);
             _current.Enter();
         }
+
+        public bool TrySelectCandidate(WordCandidate word)
+        {
+            var selector = _current as ICandidateSelector;
+            return selector != null && selector.TrySelectCandidate(word);
+        }
+
+        public void RequestCharacterMove(float axis)
+        {
+            if (axis > 0f) MoveAxis = 1f;
+            else if (axis < 0f) MoveAxis = -1f;
+        }
+
     }
 }

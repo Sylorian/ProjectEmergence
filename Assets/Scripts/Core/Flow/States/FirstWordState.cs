@@ -8,7 +8,7 @@ namespace Hyperplasia.Core.Flow.States
     /// 键入拼音 → 候选词；空格选第一个、数字键选第 N 个；选中即按词性跳转：
     /// 动词 → 状态 2（SecondWord）；名词 → 状态 3（InspectItem）；都不是 →「这行不通」。
     /// </summary>
-    public sealed class FirstWordState : IInputState
+    public sealed class FirstWordState : IInputState, ICandidateSelector
     {
         private readonly InputController _c;
         private int _selected;
@@ -63,6 +63,15 @@ namespace Hyperplasia.Core.Flow.States
 
         public void Exit()
         {
+        }
+
+        public bool TrySelectCandidate(WordCandidate word)
+        {
+            if (word == null) return false;
+            int index = _c.TyperEngine.GetCandidates().IndexOf(word);
+            if (index < 0) return false;   // 点击的是过期 chip：什么都不做
+            Select(index);
+            return true;
         }
 
         private void Refresh()

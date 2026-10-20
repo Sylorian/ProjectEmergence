@@ -21,6 +21,7 @@ namespace Hyperplasia.Presenter
         public GameObject InputRoot;
 
         public TyperEngine Engine { get; set; }
+        public InputController Controller { get; set; }
 
         private readonly List<WordCandidateView> _candidateChips = new List<WordCandidateView>();
         private readonly List<ConfirmedWordView> _confirmedChips = new List<ConfirmedWordView>();
@@ -131,13 +132,20 @@ namespace Hyperplasia.Presenter
             }
             _candidateChips.Clear();
 
-            foreach (var candidate in candidates)
+            foreach (WordCandidate c in candidates)
             {
                 WordCandidateView chip = GameObject.Instantiate(CandidateTemplate, CandidatesRoot);
-                chip.SetLabel(candidate.Text);
+                chip.SetLabel(c.Text);
+                chip.Subscribe(() => OnCandidateClicked(c));
                 UIBase.SetActive(chip, true);
                 _candidateChips.Add(chip);
             }
+        }
+
+        private void OnCandidateClicked(WordCandidate candidate)
+        {
+            if (Controller == null) return;
+            Controller.TrySelectCandidate(candidate);
         }
 
         private void RefreshHistory()

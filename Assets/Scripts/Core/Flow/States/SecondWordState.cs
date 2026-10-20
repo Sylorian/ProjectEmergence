@@ -9,7 +9,7 @@ namespace Hyperplasia.Core.Flow.States
     /// 进入时高亮可操作目标；键入拼音给候选；空格/数字键选中名词 → 生成 Confirmed 芯片；
     /// 回车提交 → 状态 4（Resolve）。Draft 为空时按 Backspace → 回退状态 1 并清除 Confirmed。
     /// </summary>
-    public sealed class SecondWordState : IInputState
+    public sealed class SecondWordState : IInputState, ICandidateSelector
     {
         private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
         private static readonly int[] NoIds = Array.Empty<int>();
@@ -81,6 +81,15 @@ namespace Hyperplasia.Core.Flow.States
 
         public void Exit()
         {
+        }
+
+        public bool TrySelectCandidate(WordCandidate word)
+        {
+            if (word == null) return false;
+            int index = _c.TyperEngine.GetCandidates().IndexOf(word);
+            if (index < 0) return false;   // 点击的是过期 chip：什么都不做
+            Select(index);
+            return true;
         }
 
         private void Refresh()

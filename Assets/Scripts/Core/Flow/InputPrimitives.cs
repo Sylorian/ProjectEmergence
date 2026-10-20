@@ -131,6 +131,11 @@ namespace Hyperplasia.Core.Flow
         void Exit();
     }
 
+    public interface ICandidateSelector
+    {
+        bool TrySelectCandidate(WordCandidate word);
+    }
+
     public sealed class NullTextInputSource : ITextInputSource
     {
         public bool DeviceReady => false;
