@@ -39,7 +39,7 @@ namespace Hyperplasia.Bridge
                     e.pinyin,
                     e.room,
                     e.tags,
-                    e.clue);
+                    e.clues);
                 db.Entities.Add(ent);
                 db.EntityById[ent.Id] = ent;
             }
@@ -65,13 +65,20 @@ namespace Hyperplasia.Bridge
                 var rule = new Rule(
                     r.verb_id,
                     r.target_id,
-                    r.target_tag,
-                    r.tag_exist,
-                    r.tag_changed,
-                    r.required_item,
+                    r.require_tags,
+                    r.remove_tags,
+                    r.add_tags,
+                    r.require_inventory_item,
+                    r.require_inventory_item_tag,
+                    r.require_flag,
+                    r.set_flag,
+                    r.spawn_item,
                     r.effect,
                     r.feedback,
-                    r.feedback_fail);
+                    r.feedback_fail_tag,
+                    r.feedback_fail_inventory,
+                    r.feedback_fail_flag
+                );
                 db.Rules.Add(rule);
                 if (!db.RulesByVerb.ContainsKey(rule.VerbId))
                 {

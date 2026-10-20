@@ -10,6 +10,8 @@ namespace Hyperplasia.Core.Flow
         Succeed,
         /// <summary>目标命中但前置不满足。</summary>
         TagFail,
+        /// <summary>目标命中但背包物品持有条件不满足。</summary>
+        InventoryFail,
         /// <summary>没有任何规则的目标命中。</summary>
         NoMatch
     }
@@ -28,7 +30,7 @@ namespace Hyperplasia.Core.Flow
     /// 查搭配：Resolve(verbId, targetId) 在 rules[verbId] 里按顺序找第一条 target 命中的规则，
     /// 命中且前置满足 → 执行 effects + feedback；命中但前置不满足 → fail_feedback；都不命中 → default_fallback。
     /// </summary>
-    public sealed class ResolveEngine
+    public sealed partial class ResolveEngine
     {
         private readonly GameDatabase _db;
 
@@ -37,7 +39,7 @@ namespace Hyperplasia.Core.Flow
             _db = db ?? new GameDatabase();
         }
 
-        public ResolveResult Resolve(int verbId, int entityId, GameSession state)
+        public ResolveResult Resolve(int verbId, int entityId, GameSession session)
         {
             var result = new ResolveResult();
 
@@ -67,8 +69,11 @@ namespace Hyperplasia.Core.Flow
                 if (r.TargetId != entityId) continue;
                 result.Rule = r;
                 result.Outcome = ResolveOutcome.TagFail;
-                result.Feedback = r.FeedbackFail ?? GameConfig.DEFAULT_FALLBACK;
-                if (e.HasTag(r.TargetTag) != r.TagExist) continue;
+                result.Feedback = r.FeedbackFailTag ?? GameConfig.DEFAULT_FALLBACK;
+                if (!e.HasTags(r.RequireTags)) continue;
+                result.Outcome = ResolveOutcome.InventoryFail;
+                result.Feedback = r.FeedbackFailInventory ?? GameConfig.DEFAULT_FALLBACK;
+                if (!session.HasInventoryItem(r.RequireInventoryItem)) continue;
                 result.Outcome = ResolveOutcome.Succeed;
                 result.Feedback = r.Feedback ?? GameConfig.DEFAULT_FALLBACK;
                 Apply(r);
@@ -81,8 +86,8 @@ namespace Hyperplasia.Core.Flow
         private void Apply(Rule rule)
         {
             if (!_db.EntityById.TryGetValue(rule.TargetId, out var e) || e == null) return;
-            e.RemoveTag(rule.TargetTag);
-            e.AddTag(rule.TagChanged);
+            e.RemoveTags(rule.RemoveTags);
+            e.AddTags(rule.AddTags);
 
             ExecuteEffect(rule.Effect);
         }

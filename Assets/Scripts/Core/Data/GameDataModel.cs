@@ -34,8 +34,8 @@ namespace Hyperplasia.Core.Data
         /// <summary>
         /// 查看物品时显示的文案
         /// </summary>
-        private string _clue;
-        public string Clue => _clue;
+        private string[] _clues;
+        public string[] Clues => _clues;
         
         public Entity(
             int id = 0,
@@ -43,7 +43,7 @@ namespace Hyperplasia.Core.Data
             string pinyin = null,
             string room = "",
             List<string> tags = null,
-            string clue = ""
+            string[] clues = null
         )
         {
             _id = id;
@@ -51,13 +51,23 @@ namespace Hyperplasia.Core.Data
             _pinyin = pinyin;
             _room = room;
             _tags = tags ?? new List<string>();
-            _clue = clue;
+            _clues = clues ?? Array.Empty<string>();
         }
 
         public bool HasTag(string tag)
         {
             if (tag == "") return true;
             return _tags.Contains(tag);
+        }
+
+        public bool HasTags(string[] tags)
+        {
+            if (tags == null || tags.Length == 0) return true;
+            foreach (var tag in tags)
+            {
+                if (!HasTag(tag)) return false;
+            }
+            return true;
         }
 
         public bool AddTag(string tag)
@@ -68,6 +78,17 @@ namespace Hyperplasia.Core.Data
             return true;
         }
 
+        public bool AddTags(string[] tags)
+        {
+            if (tags == null || tags.Length == 0) return false;
+            bool added = false;
+            foreach (var tag in tags)
+            {
+                added |= AddTag(tag);
+            }
+            return added;
+        }
+
         public bool RemoveTag(string tag)
         {
             if (string.IsNullOrEmpty(tag)) return false;
@@ -75,9 +96,20 @@ namespace Hyperplasia.Core.Data
             _tags.Remove(tag);
             return true;
         }
+
+        public bool RemoveTags(string[] tags)
+        {
+            if (tags == null || tags.Length == 0) return false;
+            bool removed = false;
+            foreach (var tag in tags)
+            {
+                removed |= RemoveTag(tag);
+            }
+            return removed;
+        }
     }
 
-    /// <summary>动词。AliasPinyin 与 Aliases 一一对应（可短于 Aliases）。</summary>
+    /// <summary>动词。</summary>
     public class Verb
     {
         /// <summary>
@@ -113,73 +145,115 @@ namespace Hyperplasia.Core.Data
     /// <summary>一条搭配规则（对应 rules[] 的一项）。</summary>
     public sealed class Rule
     {
-        /// <summary>
-        /// 动词的编号，与verbs表中的编号一致
-        /// </summary>
-        private int _verb_id;
-        public int VerbId => _verb_id;
-        /// <summary>
-        /// 对象物品的编号，与entities表中的编号一致
-        /// </summary>
-        private int _target_id;
-        public int TargetId => _target_id;
-        /// <summary>
-        /// 动作目标物品需要持有的标签。没有则留空。
-        /// </summary>
-        private string _target_tag;
-        public string TargetTag => _target_tag;
-        /// <summary>
-        /// 检定标签的目标存在状态，符合则检定成功，不符合则检定失败。没有则留空。
-        /// </summary>
-        private bool _tag_exist;
-        public bool TagExist => _tag_exist;
-        /// <summary>
-        /// 标签的改动内容，即将原来的标签改为什么。没有则留空。
-        /// </summary>
-        private string _tag_changed;
-        public string TagChanged => _tag_changed;
-        /// <summary>
-        /// 动作所需物品，即玩家背包中必须持有的物品。没有则留空。
-        /// </summary>
-        private string _required_item;
-        public string RequiredItem => _required_item;
-        /// <summary>
-        /// 动作产生的除改变标签以外的效果的英文名，采用蛇形命名法`snake_case`。没有则留空。
-        /// </summary>
-        private string _effect;
-        public string Effect => _effect;
-        /// <summary>
-        /// 检定成功后打印在打字机上的文案
-        /// </summary>
-        private string _feedback;
-        public string Feedback => _feedback;
-        /// <summary>
-        /// 物品符合目标，但标签不符合条件时打印在打字机上的文案
-        /// </summary>
-        private string _feedback_fail;
-        public string FeedbackFail => _feedback_fail;
+    /// <summary>
+    /// 动词的编号，与verbs表中的编号一致
+    /// </summary>
+    private int _verb_id;
+    public int VerbId => _verb_id;
+    /// <summary>
+    /// 对象物品的编号，与entities表中的编号一致
+    /// </summary>
+    private int _target_id;
+    public int TargetId => _target_id;
+    /// <summary>
+    /// 动作目标物品需要持有的标签。没有则留空。
+    /// </summary>
+    private string[] _require_tags;
+    public string[] RequireTags => _require_tags;
+    /// <summary>
+    /// 要移除的标签。没有则留空给。
+    /// </summary>
+    private string[] _remove_tags;
+    public string[] RemoveTags => _remove_tags;
+    /// <summary>
+    /// 增加的标签。没有则留空。
+    /// </summary>
+    private string[] _add_tags;
+    public string[] AddTags => _add_tags;
+    /// <summary>
+    /// 动作所需物品编号，即玩家背包中必须持有的物品。没有则留空。
+    /// </summary>
+    private int _require_inventory_item;
+    public int RequireInventoryItem => _require_inventory_item;
+    /// <summary>
+    /// 要求背包中的该物品带有此标签。没有则留空。
+    /// </summary>
+    private string _require_inventory_item_tag;
+    public string RequireInventoryItemTag => _require_inventory_item_tag;
+    /// <summary>
+    /// 前置全局flag，满足才检定成功。没有则留空。
+    /// </summary>
+    private string _require_flag;
+    public string RequireFlag => _require_flag;
+    /// <summary>
+    /// 成功后设置的全局flag。没有则留空。
+    /// </summary>
+    private string _set_flag;
+    public string SetFlag => _set_flag;
+    /// <summary>
+    /// 成功后生成/掉落的物品。没有则留空。
+    /// </summary>
+    private string _spawn_item;
+    public string SpawnItem => _spawn_item;
+    /// <summary>
+    /// 动作产生的除改变标签以外的效果的英文名，采用蛇形命名法snake_case。没有则留空。
+    /// </summary>
+    private string _effect;
+    public string Effect => _effect;
+    /// <summary>
+    /// 检定成功后打印在打字机上的文案
+    /// </summary>
+    private string _feedback;
+    public string Feedback => _feedback;
+    /// <summary>
+    /// 物品符合目标，但标签不符合条件时打印在打字机上的文案
+    /// </summary>
+    private string _feedback_fail_tag;
+    public string FeedbackFailTag => _feedback_fail_tag;
+    /// <summary>
+    /// 物品符合目标，标签也符合目标，但背包物品持有条件不满足时打印的文案
+    /// </summary>
+    private string _feedback_fail_inventory;
+    public string FeedbackFailInventory => _feedback_fail_inventory;
+    /// <summary>
+    /// 前置全局flag条件不满足时打印的文案。没有则留空。
+    /// </summary>
+    private string _feedback_fail_flag;
+    public string FeedbackFailFlag => _feedback_fail_flag;
 
         public Rule(
-            int verb_id = 0,
-            int target_id = 0,
-            string target_tag = null,
-            bool tag_exist = false,
-            string tag_changed = null,
-            string required_item = null,
-            string effect = null,
-            string feedback = null,
-            string feedback_fail = null
+            int verb_id,
+            int target_id,
+            string[] require_tags,
+            string[] remove_tags,
+            string[] add_tags,
+            int require_inventory_item,
+            string require_inventory_item_tag,
+            string require_flag,
+            string set_flag,
+            string spawn_item,
+            string effect,
+            string feedback,
+            string feedback_fail_tag,
+            string feedback_fail_inventory,
+            string feedback_fail_flag
         )
         {
             _verb_id = verb_id;
             _target_id = target_id;
-            _target_tag = target_tag;
-            _tag_exist = tag_exist;
-            _tag_changed = tag_changed;
-            _required_item = required_item;
+            _require_tags = require_tags;
+            _remove_tags = remove_tags;
+            _add_tags = add_tags;
+            _require_inventory_item = require_inventory_item;
+            _require_inventory_item_tag = require_inventory_item_tag;
+            _require_flag = require_flag;
+            _set_flag = set_flag;
+            _spawn_item = spawn_item;
             _effect = effect;
             _feedback = feedback;
-            _feedback_fail = feedback_fail;
+            _feedback_fail_tag = feedback_fail_tag;
+            _feedback_fail_inventory = feedback_fail_inventory;
+            _feedback_fail_flag = feedback_fail_flag;
         }
     }
 
