@@ -18,7 +18,7 @@ namespace Hyperplasia.Runtime
     /// 组装层
     /// </summary>
     [DisallowMultipleComponent]
-    public class GameBootstrap : MonoBehaviour
+    public partial class GameBootstrap : MonoBehaviour
     {
         public static GameBootstrap Instance { get; private set; }
 
@@ -27,14 +27,14 @@ namespace Hyperplasia.Runtime
         public GameData GameData;
 
         [Header("打字机界面")]
-        public TyperPresenter Typer;
+        [SerializeField] private TyperPresenter _typerPresenter;
 
         [Header("世界表现")]
-        public WorldPresenter World;
+        [SerializeField] private WorldPresenter _worldPresenter;
 
-        public GameSession Session { get; private set; }
-        public InputController Controller { get; private set; }
-        public ITextInputSource Source { get; private set; }
+        private GameSession _session;
+        private InputController _controller;
+        private ITextInputSource _inputSource;
 
 
         private void Awake()
@@ -50,9 +50,9 @@ namespace Hyperplasia.Runtime
 
         private void Update()
         {
-            if (Controller == null) return;
-            Controller.Update(Time.unscaledTime);
-            Typer.UpdateInputVisibility(Controller.State);
+            if (_controller == null) return;
+            _controller.Update(Time.unscaledTime);
+            _typerPresenter.UpdateInputVisibility(_controller.State);
         }
 
         private void OnDestroy()
@@ -68,33 +68,33 @@ namespace Hyperplasia.Runtime
         {
             EnsureInput();
 
-            Session = new GameSession(LoadDatabase());
-            Controller = new InputController(Source, Session);
+            _session = new GameSession(LoadDatabase());
+            _controller = new InputController(_inputSource, _session);
 
-            Typer.Engine = Session.Typer;
-            Typer.Controller = Controller;
+            _typerPresenter.Engine = _session.TyperEngine;
+            _typerPresenter.Controller = _controller;
 
-            if (Typer.Engine == null || Typer.DraftLine == null)
+            if (_typerPresenter.Engine == null || _typerPresenter.DraftLine == null)
                 Debug.LogError("[GameBootstrap] Typer/World 引用不完整，请检查 Inspector 绑定。");
 
-            if (Typer.DraftLine != null) Typer.DraftLine.Controller = Controller;
-            if (World.CharacterMover != null) World.CharacterMover.SetController(Controller);
+            if (_typerPresenter.DraftLine != null) _typerPresenter.DraftLine.Controller = _controller;
+            if (_worldPresenter.CharacterMover != null) _worldPresenter.CharacterMover.SetController(_controller);
 
             HookTyperEvents();
-            Typer.PrepareTyper(InputState.Explore);
+            _typerPresenter.PrepareTyper(InputState.Explore);
         }
 
         private void EnsureInput()
         {
-            if (Source != null) return;
-            Source = TextInputSources.Create();
+            if (_inputSource != null) return;
+            _inputSource = TextInputSources.Create();
         }
 
         private void TeardownInput()
         {
-            var disposable = Source as IDisposable;
+            var disposable = _inputSource as IDisposable;
             disposable?.Dispose();
-            Source = null;
+            _inputSource = null;
         }
 
         private GameDatabase LoadDatabase()
@@ -109,21 +109,21 @@ namespace Hyperplasia.Runtime
 
         private void HookTyperEvents()
         {
-            Session.Typer.FeedbackRaised += Typer.OnFeedback;
-            Session.Typer.FirstWordCommitted += Typer.OnFirstWord;
-            Session.Typer.SecondWordCommitted += Typer.OnSecondWord;
-            Session.Typer.CandidatesChanged += Typer.OnCandidatesChanged;
-            Session.Typer.InspectionRaised += Typer.OnInspection;
+            Session.TyperEngine.FeedbackRaised += _typerPresenter.OnFeedback;
+            Session.TyperEngine.FirstWordCommitted += _typerPresenter.OnFirstWord;
+            Session.TyperEngine.SecondWordCommitted += _typerPresenter.OnSecondWord;
+            Session.TyperEngine.CandidatesChanged += _typerPresenter.OnCandidatesChanged;
+            Session.TyperEngine.InspectionRaised += _typerPresenter.OnInspection;
         }
 
         private void UnhookTyperEvents()
         {
-            if (Session == null || Typer == null) return;
-            Session.Typer.FeedbackRaised -= Typer.OnFeedback;
-            Session.Typer.FirstWordCommitted -= Typer.OnFirstWord;
-            Session.Typer.SecondWordCommitted -= Typer.OnSecondWord;
-            Session.Typer.CandidatesChanged -= Typer.OnCandidatesChanged;
-            Session.Typer.InspectionRaised -= Typer.OnInspection;
+            if (Session == null || _typerPresenter == null) return;
+            Session.TyperEngine.FeedbackRaised -= _typerPresenter.OnFeedback;
+            Session.TyperEngine.FirstWordCommitted -= _typerPresenter.OnFirstWord;
+            Session.TyperEngine.SecondWordCommitted -= _typerPresenter.OnSecondWord;
+            Session.TyperEngine.CandidatesChanged -= _typerPresenter.OnCandidatesChanged;
+            Session.TyperEngine.InspectionRaised -= _typerPresenter.OnInspection;
         }
     }
 }

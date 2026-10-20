@@ -8,7 +8,7 @@ namespace Hyperplasia.Core.Flow
     public sealed class GameSession
     {
         public readonly GameDatabase Database;
-        public readonly TyperEngine Typer;
+        public readonly TyperEngine TyperEngine;
 
         private readonly Dictionary<int, Entity> _inventory = new Dictionary<int, Entity>();
 
@@ -21,7 +21,7 @@ namespace Hyperplasia.Core.Flow
         public GameSession(GameDatabase db)
         {
             Database = db;
-            Typer = new TyperEngine(db);
+            TyperEngine = new TyperEngine(db);
 
             CurrentRoom = GameConfig.START_ROOM;
         }

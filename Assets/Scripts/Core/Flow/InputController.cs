@@ -32,7 +32,7 @@ namespace Hyperplasia.Core.Flow
             Router.CommandPressed += HandleCommand;
 
             Session = session;
-            TyperEngine = Session.Typer;
+            TyperEngine = Session.TyperEngine;
 
             _states = new IInputState[Enum.GetValues(typeof(InputState)).Length];
             _states[(int)InputState.Explore] = new ExploreState(this);
