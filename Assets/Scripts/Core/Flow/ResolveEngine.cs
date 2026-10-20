@@ -89,12 +89,34 @@ namespace Hyperplasia.Core.Flow
             e.RemoveTags(rule.RemoveTags);
             e.AddTags(rule.AddTags);
 
-            ExecuteEffect(rule.Effect);
+            ExecuteEffect(rule);
         }
 
-        private void ExecuteEffect(string effect)
+        private void ExecuteEffect(Rule rule)
         {
-            // TODO: Implement effect execution logic here.
+            switch (rule.Effect)
+            {
+                case "turn_on_lamp": TurnOnLamp(rule.TargetId); break;
+                case "turn_off_lamp": TurnOffLamp(rule.TargetId); break;
+                case "open_wardrobe": OpenWardrobe(rule.TargetId); break;
+                case "close_wardrobe": CloseWardrobe(rule.TargetId); break;
+                case "talk_to_owl": TalkToOwl(rule.TargetId); break;
+                case "sit_on_sofa": SitOnSofa(rule.TargetId); break;
+                case "open_storage": OpenStorage(rule.TargetId); break;
+                case "break_vase": BreakVase(rule.TargetId); break;
+                case "mix_cleaner_can": MixCleanerCan(rule.TargetId); break;
+                case "poison_mom": PoisonMom(rule.TargetId); break;
+                case "feed_mom": FeedMom(rule.TargetId); break;
+                case "disassemble_vent": DisassembleVent(rule.TargetId); break;
+                case "answer_phone": AnswerPhone(rule.TargetId); break;
+                case "take_knife": TakeKnife(rule.TargetId); break;
+                case "stab_mom": StabMom(rule.TargetId); break;
+                case "open_door": OpenDoor(rule.TargetId); break;
+                case "break_window": BreakWindow(rule.TargetId); break;
+                case "escape_window": EscapeWindow(rule.TargetId); break;
+                case "light_candle": LightCandle(rule.TargetId); break;
+                case "ignite_table": IgniteTable(rule.TargetId); break;
+            }
         }
 
         /// <summary>某动词当前可操作的目标实体（任一规则 target 命中），供状态 2 高亮用。</summary>
