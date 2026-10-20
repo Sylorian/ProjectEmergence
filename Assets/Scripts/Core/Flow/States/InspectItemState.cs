@@ -10,9 +10,6 @@ namespace Hyperplasia.Core.Flow.States
     /// </summary>
     public sealed class InspectItemState : IInputState
     {
-        private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly int[] NoIds = Array.Empty<int>();
-
         private readonly InputController _c;
 
         public InspectItemState(InputController c)
@@ -25,10 +22,9 @@ namespace Hyperplasia.Core.Flow.States
         public void Enter()
         {
             _c.Router.TypingEnabled = false;
-            _c.Buffer.Clear();
-            _c.SetCandidates(NoCandidates);
-            _c.SetHighlight(NoIds);
-            _c.RaiseInspection(BuildLabel());
+            _c.TyperEngine.Buffer.Clear();
+            _c.TyperEngine.ClearCandidates();
+            _c.TyperEngine.RaiseInspection(BuildLabel());
         }
 
         public void OnText(string text)
@@ -43,10 +39,10 @@ namespace Hyperplasia.Core.Flow.States
         {
             switch (command)
             {
-                case InputCommand.Cancel:      // Esc → 回状态 0
+                case InputCommand.Cancel:
                     _c.TransitionTo(InputState.Explore);
                     break;
-                case InputCommand.Backspace:   // Backspace → 回状态 1
+                case InputCommand.Backspace:
                     _c.TransitionTo(InputState.FirstWord);
                     break;
             }
@@ -58,8 +54,8 @@ namespace Hyperplasia.Core.Flow.States
 
         private string BuildLabel()
         {
-            WordCandidate w = _c.FirstWord;
-            if (!_c.Database.EntityById.TryGetValue(w.Id, out Entity e)) return null;
+            WordCandidate w = _c.TyperEngine.FirstWord;
+            if (!_c.Session.Database.EntityById.TryGetValue(w.Id, out Entity e)) return null;
 
             var sb = new StringBuilder();
             sb.Append(e.Name);

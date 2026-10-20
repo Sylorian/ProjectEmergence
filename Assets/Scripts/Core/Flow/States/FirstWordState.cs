@@ -10,10 +10,7 @@ namespace Hyperplasia.Core.Flow.States
     /// </summary>
     public sealed class FirstWordState : IInputState
     {
-        private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-
         private readonly InputController _c;
-        private readonly List<WordCandidate> _candidates = new List<WordCandidate>();
         private int _selected;
 
         public FirstWordState(InputController c)
@@ -26,16 +23,16 @@ namespace Hyperplasia.Core.Flow.States
         public void Enter()
         {
             _c.Router.TypingEnabled = true;
-            _c.Buffer.Clear();
-            _c.ClearFirstWord();   // 清除上一轮遗留的 Confirmed 芯片
-            _c.ResetTarget();
+            _c.TyperEngine.Buffer.Clear();
+            _c.TyperEngine.ClearFirstWord();   // 清除上一轮遗留的 Confirmed 芯片
+            _c.TyperEngine.ResetSecondWord();
             _selected = 0;
             Refresh();
         }
 
         public void OnText(string text)
         {
-            _c.Buffer.Append(text);
+            _c.TyperEngine.Buffer.Append(text);
             Refresh();
         }
 
@@ -48,23 +45,23 @@ namespace Hyperplasia.Core.Flow.States
         {
             switch (command)
             {
-                case InputCommand.Confirm:   // 空格：选中（默认第一个）并跳转
-                    Select(_candidates.Count > 0 ? _selected : 0);
+                case InputCommand.Confirm:
+                    Select(_c.TyperEngine.GetCandidates().Count > 0 ? _selected : 0);
                     break;
-                case InputCommand.Submit:    // 回车：迁就「输入后直接回车」的习惯
-                    if (_candidates.Count > 0) Select(_selected);
-                    else if (_c.Buffer.IsEmpty) _c.TransitionTo(InputState.Explore);
-                    else _c.RaiseFeedback("这行不通");
+                case InputCommand.Submit:
+                    if (_c.TyperEngine.GetCandidates().Count > 0) Select(_selected);
+                    else if (_c.TyperEngine.Buffer.IsEmpty) _c.TransitionTo(InputState.Explore);
+                    else _c.TyperEngine.RaiseFeedback("这行不通");
                     break;
-                case InputCommand.Cancel:    // Esc → 回状态 0
-                    _c.Buffer.Clear();
-                    _c.SetCandidates(NoCandidates);
-                    _c.ClearFirstWord();
-                    _c.ResetTarget();
+                case InputCommand.Cancel:
+                    _c.TyperEngine.Buffer.Clear();
+                    _c.TyperEngine.ClearCandidates();
+                    _c.TyperEngine.ClearFirstWord();
+                    _c.TyperEngine.ResetSecondWord();
                     _c.TransitionTo(InputState.Explore);
                     break;
                 case InputCommand.Backspace:
-                    if (_c.Buffer.Backspace()) Refresh();
+                    if (_c.TyperEngine.Buffer.Backspace()) Refresh();
                     break;
             }
         }
@@ -75,44 +72,38 @@ namespace Hyperplasia.Core.Flow.States
 
         private void Refresh()
         {
-            _candidates.Clear();
-            List<WordCandidate> found = _c.Library.GetCandidates(_c.Buffer.Text);
-            if (found != null)
-                for (int i = 0; i < found.Count; i++) _candidates.Add(found[i]);
-
-            if (_selected >= _candidates.Count) _selected = 0;
-            _c.SetCandidates(_candidates);
+            _c.TyperEngine.MatchAndStoreCandidates();
         }
 
         private void Select(int index)
         {
-            if (_candidates.Count == 0)
+            if (_c.TyperEngine.GetCandidates().Count == 0)
             {
-                _c.RaiseFeedback("这行不通");
+                _c.TyperEngine.RaiseFeedback("这行不通");
                 return;
             }
 
-            if (index < 0 || index >= _candidates.Count) index = 0;
+            if (index < 0 || index >= _c.TyperEngine.GetCandidates().Count) index = 0;
             _selected = index;
-            WordCandidate word = _candidates[index];
+            WordCandidate word = _c.TyperEngine.GetCandidates()[index];
 
             if (word.Kind == WordKind.Verb)
             {
-                _c.CommitFirstWord(word);
-                _c.Buffer.Clear();
-                _c.SetCandidates(NoCandidates);
+                _c.TyperEngine.CommitFirstWord(word);
+                _c.TyperEngine.Buffer.Clear();
+                _c.TyperEngine.ClearCandidates();
                 _c.TransitionTo(InputState.SecondWord);
             }
             else if (word.Kind == WordKind.Noun)
             {
-                _c.CommitFirstWord(word);
-                _c.Buffer.Clear();
-                _c.SetCandidates(NoCandidates);
+                _c.TyperEngine.CommitFirstWord(word);
+                _c.TyperEngine.Buffer.Clear();
+                _c.TyperEngine.ClearCandidates();
                 _c.TransitionTo(InputState.InspectItem);
             }
             else
             {
-                _c.RaiseFeedback("这行不通");
+                _c.TyperEngine.RaiseFeedback("这行不通");
             }
         }
     }

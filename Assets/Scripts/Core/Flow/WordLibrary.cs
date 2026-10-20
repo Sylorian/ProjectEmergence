@@ -15,6 +15,8 @@ namespace Hyperplasia.Core.Flow
     /// <summary>一个候选词：中文文本 + 拼音 + 词性 + 对应 id（动词 id 或实体 id）。</summary>
     public sealed class WordCandidate
     {
+        public static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
+
         public readonly string Text;
         public readonly string Pinyin;
         public readonly WordKind Kind;

@@ -20,12 +20,15 @@ namespace Hyperplasia.Core.Flow.States
         public void Enter()
         {
             _c.Router.TypingEnabled = false;
-            _c.Buffer.Clear();
+            _c.TyperEngine.Buffer.Clear();
 
-            ResolveResult result = _c.Resolver.Resolve(_c.FirstWordId, _c.TargetId, _c.World);
-            _c.SetLastResolve(result);
-            _c.World.Ink -= GameConfig.INK_COST_PER_SENTENCE;
-            _c.RaiseFeedback(result.Feedback);
+            ResolveResult result = 
+                _c.TyperEngine.Resolver.Resolve(
+                    _c.TyperEngine.FirstWord.Id,
+                    _c.TyperEngine.SecondWord.Id,
+                    _c.Session);
+            _c.Session.Ink -= GameConfig.INK_COST_PER_SENTENCE;
+            _c.TyperEngine.RaiseFeedback(result.Feedback);
 
             // 结束 → 回状态 0
             _c.TransitionTo(InputState.Explore);

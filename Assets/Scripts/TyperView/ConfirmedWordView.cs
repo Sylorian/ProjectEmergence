@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
+using Hyperplasia.Utils;
 
 namespace Hyperplasia.View
 {
@@ -12,11 +13,11 @@ namespace Hyperplasia.View
 
         public void Subscribe(UnityAction action)
         {
-            if (Button != null) Button.onClick.AddListener(action);
+            UIBase.Subscribe(Button, action);
         }
         public void SetLabel(string text)
         {
-            if (Label != null) Label.SetText(text);
+            UIBase.SetText(Label, text);
         }
     }
 }
