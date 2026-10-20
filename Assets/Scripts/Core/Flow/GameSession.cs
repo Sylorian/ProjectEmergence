@@ -14,8 +14,20 @@ namespace Hyperplasia.Core.Flow
 
         private string _currentRoom;
         public string CurrentRoom { get { return _currentRoom; } set { _currentRoom = value; } }
-        private float _ink;
-        public float Ink { get { return _ink; } set { _ink = value; } }
+        
+        private int _ink;
+        /// <summary>
+        /// 当前墨水数量。
+        /// </summary>
+        public int Ink { get { return _ink; } set { _ink = value; InkChanged?.Invoke(_ink); } }
+        public event Action<int> InkChanged;
+
+        private float _growth;
+        /// <summary>
+        /// 当前增生值。
+        /// </summary>
+        public float Growth { get { return _growth; } set { _growth = value; GrowthChanged?.Invoke(_growth); } }
+        public event Action<float> GrowthChanged;
 
         /// <summary>初始实体状态取自 GameDatabase；startRoom 缺省取第一个实体的房间。</summary>
         public GameSession(GameDatabase db)
@@ -24,6 +36,8 @@ namespace Hyperplasia.Core.Flow
             TyperEngine = new TyperEngine(db);
 
             CurrentRoom = GameConfig.START_ROOM;
+            Ink = GameConfig.START_INK;
+            Growth = GameConfig.START_GROWTH;
         }
 
         public bool TryGetEntity(int id, out Entity entity)
