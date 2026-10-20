@@ -124,5 +124,17 @@ namespace Hyperplasia.Core.Flow
         {
             OnTableIgnited?.Invoke(tableId);
         }
+
+        public event Action<int> OnEnterStorageFromLivingRoom;  // 参数为客厅侧储藏室门实体的Id
+        private void EnterStorageFromLivingRoom(int storageDoorId)
+        {
+            OnEnterStorageFromLivingRoom?.Invoke(storageDoorId);
+        }
+
+        public event Action<int> OnEnterLivingRoomFromStorage;  // 参数为储藏室侧储藏室门实体的Id
+        private void EnterLivingRoomFromStorage(int storageDoorId)
+        {
+            OnEnterLivingRoomFromStorage?.Invoke(storageDoorId);
+        }
     }
 }

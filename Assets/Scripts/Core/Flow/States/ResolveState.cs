@@ -3,8 +3,7 @@ using Hyperplasia.Core.Data;
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
-    /// 状态 4 · 解析反馈（Resolve）。
-    /// 进入即查搭配、执行 effects、抛出 feedback；结束后立即回状态 0，让玩家看到世界变化。
+    /// 解析反馈（Resolve）
     /// </summary>
     public sealed class ResolveState : IInputState
     {

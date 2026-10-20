@@ -72,7 +72,7 @@ public class GameDataEntity_rules
     /// </summary>
     public string[] add_tags;
     /// <summary>
-    /// 动作所需物品编号，即玩家背包中必须持有的物品。没有则留空。
+    /// 动作所需物品编号，即玩家背包中必须持有的物品。没有则填入-1。
     /// </summary>
     public int require_inventory_item;
     /// <summary>
@@ -107,6 +107,10 @@ public class GameDataEntity_rules
     /// 物品符合目标，标签也符合目标，但背包物品持有条件不满足时打印的文案
     /// </summary>
     public string feedback_fail_inventory;
+    /// <summary>
+    /// 物品及其标签符合目标，手中持有所需物品，但持有物标签不符合要求时打印的文案
+    /// </summary>
+    public string feedback_fail_inventory_tag;
     /// <summary>
     /// 前置全局flag条件不满足时打印的文案。没有则留空。
     /// </summary>

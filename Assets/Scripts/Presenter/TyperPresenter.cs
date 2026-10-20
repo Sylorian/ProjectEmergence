@@ -35,8 +35,11 @@ namespace Hyperplasia.Presenter
             UIBase.SetActive(InputRoot, inputState != InputState.Explore);
         }
 
-        public void PrepareTyper(InputState inputState)
+        public void Prepare(TyperEngine engine, InputController controller, InputState inputState)
         {
+            Engine = engine;
+            Controller = controller;
+            PrepareHistory();
             PrepareCandidates();
             PrepareConfirmedWords();
             RefreshConfirmedWords();
@@ -76,6 +79,12 @@ namespace Hyperplasia.Presenter
             RefreshHistory();
         }
         #endregion
+
+        private void PrepareHistory()
+        {
+            if (HistoryText == null) return;
+            RefreshHistory();
+        }
 
         private void PrepareConfirmedWords()
         {

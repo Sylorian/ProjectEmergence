@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Hyperplasia.Core.Data;
 
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
-    /// 状态 1 · 输入第一词（FirstWord）。
-    /// 键入拼音 → 候选词；空格选第一个、数字键选第 N 个；选中即按词性跳转：
-    /// 动词 → 状态 2（SecondWord）；名词 → 状态 3（InspectItem）；都不是 →「这行不通」。
+    /// 输入第一词（FirstWord）。
     /// </summary>
     public sealed class FirstWordState : IInputState, ICandidateSelector
     {
@@ -76,7 +75,12 @@ namespace Hyperplasia.Core.Flow.States
 
         private void Refresh()
         {
-            _c.TyperEngine.MatchAndStoreCandidates();
+            _c.TyperEngine.MatchAndStoreCandidates(CandidateFilter);
+        }
+
+        private bool CandidateFilter(WordCandidate candidate)
+        {
+            return candidate.Kind == WordKind.Verb || IsReachable(candidate.Id);
         }
 
         private void Select(int index)
@@ -109,6 +113,12 @@ namespace Hyperplasia.Core.Flow.States
             {
                 _c.TyperEngine.RaiseFeedback("这行不通");
             }
+        }
+        private bool IsReachable(int id)
+        {
+            if (id < 0) return false;
+            if (!_c.Session.Database.EntityById.TryGetValue(id, out Entity e)) return false;
+            return e.Room == _c.Session.CurrentRoom;
         }
     }
 }

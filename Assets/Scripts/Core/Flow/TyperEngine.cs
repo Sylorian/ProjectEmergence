@@ -39,7 +39,10 @@ namespace Hyperplasia.Core.Flow
         public void AddFeedback(string text)
         {
             if (!string.IsNullOrEmpty(text))
-                _history.Add(text);
+            {
+                var timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                _history.Add($"[{timeStamp}] {text}");
+            }
         }
 
         public IReadOnlyList<string> GetHistory()
@@ -60,9 +63,9 @@ namespace Hyperplasia.Core.Flow
             CandidatesChanged?.Invoke(_candidates);
         }
 
-        public void MatchAndStoreCandidates()
+        public void MatchAndStoreCandidates(Func<WordCandidate, bool> filter)
         {
-            SetCandidates(Library.GetCandidates(Buffer.Text));
+            SetCandidates(Library.GetCandidates(Buffer.Text, filter: filter));
         }
 
         public List<WordCandidate> GetCandidates()

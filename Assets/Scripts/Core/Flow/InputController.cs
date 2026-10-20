@@ -67,8 +67,7 @@ namespace Hyperplasia.Core.Flow
 
         public bool TrySelectCandidate(WordCandidate word)
         {
-            var selector = _current as ICandidateSelector;
-            return selector != null && selector.TrySelectCandidate(word);
+            return _current is ICandidateSelector selector && selector.TrySelectCandidate(word);
         }
 
         public void RequestCharacterMove(float axis)

@@ -3,8 +3,7 @@ using System;
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
-    /// 状态 0 · 移动模式（Explore）。
-    /// 左右箭头移动；按 Enter 进入状态 1。
+    /// 移动模式（Explore）。
     /// </summary>
     public sealed class ExploreState : IInputState
     {

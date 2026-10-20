@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
+using Hyperplasia.Core.Diagnostics;
 using Hyperplasia.Core.Flow;
 using Hyperplasia.Input;
 using Hyperplasia.View;
 using Hyperplasia.World;
 using Hyperplasia.Bridge;
 using Hyperplasia.Presenter;
+using Hyperplasia.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,6 +37,7 @@ namespace Hyperplasia.Runtime
         private GameSession _session;
         private InputController _controller;
         private ITextInputSource _inputSource;
+        private UnityCoreLogSink _coreLogSink;
 
 
         private void Awake()
@@ -45,6 +48,11 @@ namespace Hyperplasia.Runtime
                 return;
             }
             Instance = this;
+
+            _coreLogSink = new UnityCoreLogSink();
+            CoreLog.Enabled = Application.isEditor || Debug.isDebugBuild;
+            CoreLog.Sink = _coreLogSink.Write;
+
             Build();
         }
 
@@ -58,7 +66,11 @@ namespace Hyperplasia.Runtime
         private void OnDestroy()
         {
             if (Instance == this)
+            {
                 Instance = null;
+                CoreLog.Sink = null;
+                CoreLog.Enabled = false;
+            }
 
             UnhookTyperEvents();
             TeardownInput();
@@ -71,8 +83,7 @@ namespace Hyperplasia.Runtime
             _session = new GameSession(LoadDatabase());
             _controller = new InputController(_inputSource, _session);
 
-            _typerPresenter.Engine = _session.TyperEngine;
-            _typerPresenter.Controller = _controller;
+            _typerPresenter.Prepare(_session.TyperEngine, _controller, InputState.Explore);
 
             if (_typerPresenter.Engine == null || _typerPresenter.DraftLine == null)
                 Debug.LogError("[GameBootstrap] Typer/World 引用不完整，请检查 Inspector 绑定。");
@@ -81,7 +92,6 @@ namespace Hyperplasia.Runtime
             if (_worldPresenter.CharacterMover != null) _worldPresenter.CharacterMover.SetController(_controller);
 
             HookTyperEvents();
-            _typerPresenter.PrepareTyper(InputState.Explore);
         }
 
         private void EnsureInput()

@@ -216,6 +216,11 @@ namespace Hyperplasia.Core.Data
     private string _feedback_fail_inventory;
     public string FeedbackFailInventory => _feedback_fail_inventory;
     /// <summary>
+    /// 物品及其标签符合目标，手中持有所需物品，但持有物标签不符合要求时打印的文案
+    /// </summary>
+    private string _feedback_fail_inventory_tag;
+    public string FeedbackFailInventoryTag => _feedback_fail_inventory_tag;
+    /// <summary>
     /// 前置全局flag条件不满足时打印的文案。没有则留空。
     /// </summary>
     private string _feedback_fail_flag;
@@ -236,6 +241,7 @@ namespace Hyperplasia.Core.Data
             string feedback,
             string feedback_fail_tag,
             string feedback_fail_inventory,
+            string feedback_fail_inventory_tag,
             string feedback_fail_flag
         )
         {
@@ -253,6 +259,7 @@ namespace Hyperplasia.Core.Data
             _feedback = feedback;
             _feedback_fail_tag = feedback_fail_tag;
             _feedback_fail_inventory = feedback_fail_inventory;
+            _feedback_fail_inventory_tag = feedback_fail_inventory_tag;
             _feedback_fail_flag = feedback_fail_flag;
         }
     }

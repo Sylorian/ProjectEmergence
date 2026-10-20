@@ -5,8 +5,7 @@ using Hyperplasia.Core.Data;
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
-    /// 状态 3 · 查看物品（InspectItem）。
-    /// 直接显示该物品的标签（如「挂钟：电子、信息」）。Esc 回状态 0；Backspace 回状态 1。
+    /// 查看物品（InspectItem）
     /// </summary>
     public sealed class InspectItemState : IInputState
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
 
@@ -15,8 +16,6 @@ namespace Hyperplasia.Core.Flow
     /// <summary>一个候选词：中文文本 + 拼音 + 词性 + 对应 id（动词 id 或实体 id）。</summary>
     public sealed class WordCandidate
     {
-        public static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-
         public readonly string Text;
         public readonly string Pinyin;
         public readonly WordKind Kind;
@@ -87,7 +86,9 @@ namespace Hyperplasia.Core.Flow
         }
 
         /// <summary>按输入串取候选：先按拼音前缀，命中则返回；否则退回中文名前缀。最多 max 个。</summary>
-        public List<WordCandidate> GetCandidates(string typed, int max = 100)
+        public List<WordCandidate> GetCandidates(
+            string typed, int max = 100,
+            Func<WordCandidate, bool> filter = null)
         {
             var result = new List<WordCandidate>();
             string q = Norm(typed);
@@ -96,16 +97,13 @@ namespace Hyperplasia.Core.Flow
             var pinyinHits = new List<WordCandidate>();
             foreach (KeyValuePair<string, List<WordCandidate>> kv in _byPinyin)
             {
-                if (kv.Key.StartsWith(q, StringComparison.Ordinal)) pinyinHits.AddRange(kv.Value);
+                if (kv.Key.StartsWith(q, StringComparison.Ordinal))
+                {
+                    pinyinHits.AddRange(
+                        kv.Value.Where(c => filter == null || filter(c)));
+                }
             }
-            if (pinyinHits.Count > 0) return Trim(pinyinHits, max);
-
-            var textHits = new List<WordCandidate>();
-            foreach (KeyValuePair<string, WordCandidate> kv in _byText)
-            {
-                if (kv.Key.StartsWith(q, StringComparison.Ordinal)) textHits.Add(kv.Value);
-            }
-            return Trim(textHits, max);
+            return Trim(pinyinHits, max);
         }
 
         private static List<WordCandidate> Trim(List<WordCandidate> hits, int max)

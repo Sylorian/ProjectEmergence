@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
+using Hyperplasia.Core.Diagnostics;
 
 namespace Hyperplasia.Core.Flow
 {
@@ -12,6 +13,8 @@ namespace Hyperplasia.Core.Flow
         TagFail,
         /// <summary>目标命中但背包物品持有条件不满足。</summary>
         InventoryFail,
+        /// <summary>目标命中但背包物品标签不满足。</summary>
+        InventoryTagFail,
         /// <summary>没有任何规则的目标命中。</summary>
         NoMatch
     }
@@ -73,7 +76,12 @@ namespace Hyperplasia.Core.Flow
                 if (!e.HasTags(r.RequireTags)) continue;
                 result.Outcome = ResolveOutcome.InventoryFail;
                 result.Feedback = r.FeedbackFailInventory ?? GameConfig.DEFAULT_FALLBACK;
-                if (!session.HasInventoryItem(r.RequireInventoryItem)) continue;
+                var hasInventoryItem = session.TryGetInventoryItem(r.RequireInventoryItem, out var ii);
+                if (r.RequireInventoryItem != -1 && !hasInventoryItem) continue;
+                result.Outcome = ResolveOutcome.InventoryTagFail;
+                result.Feedback = r.FeedbackFailInventoryTag ?? GameConfig.DEFAULT_FALLBACK;
+                if (!string.IsNullOrEmpty(r.RequireInventoryItemTag) &&
+                    (ii == null || !ii.HasTag(r.RequireInventoryItemTag))) continue;
                 result.Outcome = ResolveOutcome.Succeed;
                 result.Feedback = r.Feedback ?? GameConfig.DEFAULT_FALLBACK;
                 Apply(r);
@@ -116,6 +124,8 @@ namespace Hyperplasia.Core.Flow
                 case "escape_window": EscapeWindow(rule.TargetId); break;
                 case "light_candle": LightCandle(rule.TargetId); break;
                 case "ignite_table": IgniteTable(rule.TargetId); break;
+                case "enter_storage_from_living_room": EnterStorageFromLivingRoom(rule.TargetId); break;
+                case "enter_living_room_from_storage": EnterLivingRoomFromStorage(rule.TargetId); break;
             }
         }
 

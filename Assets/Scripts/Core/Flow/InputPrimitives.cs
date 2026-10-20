@@ -8,6 +8,7 @@ namespace Hyperplasia.Core.Flow
     /// </summary>
     public enum InputState
     {
+        Start,
         Explore,
         FirstWord,
         SecondWord,
@@ -26,7 +27,6 @@ namespace Hyperplasia.Core.Flow
         Backspace,
         MoveLeft,
         MoveRight,
-        Interact
     }
 
     public static class TextNormalizer

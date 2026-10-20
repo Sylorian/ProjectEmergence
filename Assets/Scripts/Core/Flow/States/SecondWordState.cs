@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
+using Hyperplasia.Core.Diagnostics;
 
 namespace Hyperplasia.Core.Flow.States
 {
     /// <summary>
-    /// 状态 2 · 输入第二词（SecondWord）。
-    /// 进入时高亮可操作目标；键入拼音给候选；空格/数字键选中名词 → 生成 Confirmed 芯片；
-    /// 回车提交 → 状态 4（Resolve）。Draft 为空时按 Backspace → 回退状态 1 并清除 Confirmed。
+    /// 输入第二词（SecondWord）
     /// </summary>
     public sealed class SecondWordState : IInputState, ICandidateSelector
     {
-        private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly int[] NoIds = Array.Empty<int>();
-
         private readonly InputController _c;
         private int _selected;
 
@@ -94,7 +90,12 @@ namespace Hyperplasia.Core.Flow.States
 
         private void Refresh()
         {
-            _c.TyperEngine.MatchAndStoreCandidates();
+            _c.TyperEngine.MatchAndStoreCandidates(CandidateFilter);
+        }
+
+        private bool CandidateFilter(WordCandidate candidate)
+        {
+            return candidate.Kind == WordKind.Noun && IsReachable(candidate.Id);
         }
 
         private void Select(int index)
@@ -111,13 +112,6 @@ namespace Hyperplasia.Core.Flow.States
 
         private void Submit()
         {
-            WordCandidate secondWord = _c.TyperEngine.SecondWord;
-            if (secondWord == null || secondWord.Kind != WordKind.Noun || !IsReachable(secondWord.Id))
-            {
-                _c.TyperEngine.RaiseFeedback("似乎没看见这个东西");
-                return;
-            }
-
             _c.TyperEngine.ClearCandidates();
             _c.TransitionTo(InputState.Resolve);
         }

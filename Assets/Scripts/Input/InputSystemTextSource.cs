@@ -49,7 +49,6 @@ namespace Hyperplasia.Input
                 InputCommand.Backspace => kb.backspaceKey.isPressed,
                 InputCommand.MoveLeft => kb.leftArrowKey.isPressed || kb.aKey.isPressed,
                 InputCommand.MoveRight => kb.rightArrowKey.isPressed || kb.dKey.isPressed,
-                InputCommand.Interact => kb.fKey.wasPressedThisFrame,
                 _ => false,
             };
         }

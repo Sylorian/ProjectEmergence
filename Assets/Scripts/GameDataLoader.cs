@@ -77,6 +77,7 @@ namespace Hyperplasia.Bridge
                     r.feedback,
                     r.feedback_fail_tag,
                     r.feedback_fail_inventory,
+                    r.feedback_fail_inventory_tag,
                     r.feedback_fail_flag
                 );
                 db.Rules.Add(rule);

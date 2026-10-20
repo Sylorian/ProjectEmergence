@@ -26,6 +26,11 @@ namespace Hyperplasia.Core.Flow
             CurrentRoom = GameConfig.START_ROOM;
         }
 
+        public bool TryGetEntity(int id, out Entity entity)
+        {
+            return Database.TryGetEntity(id, out entity);
+        }
+
         // —— inventory ——
         public bool CollectToInventory(int id)
         {
@@ -36,6 +41,10 @@ namespace Hyperplasia.Core.Flow
                 return true;
             }
             return false;
+        }
+        public bool TryGetInventoryItem(int id, out Entity entity)
+        {
+            return _inventory.TryGetValue(id, out entity);
         }
         public bool HasInventoryItem(int id) { return _inventory.ContainsKey(id); }
         private void AddInventoryItem(int id, Entity entity) { _inventory[id] = entity; }
