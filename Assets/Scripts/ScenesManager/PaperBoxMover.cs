@@ -1,8 +1,9 @@
 using System.Collections;
 using UnityEngine;
+using Hyperplasia.Runtime;
 
 [RequireComponent(typeof(Collider2D))] // OnMouseDown 需要碰撞体
-public class PapperBoxMover : MonoBehaviour
+public class PaperBoxMover : MonoBehaviour
 {
     [Header("旋转设置")]
     [Tooltip("点击后沿 X 轴旋转到多少度")]
@@ -15,8 +16,8 @@ public class PapperBoxMover : MonoBehaviour
     public bool useEase = true;
 
     [Header("纸张盒子移动设置")]
-    [Tooltip("要移动的物体在 ScenePropertyRegistry 里的 ID")]
-    public string paperMoverId = "0006";
+    [Tooltip("要移动的物体在 GameObjectRegistry 里的 ID")]
+    public int paperMoverId = 1002;
 
     [Tooltip("收起状态（paperPosition = false）时的本地坐标")]
     public Vector3 positionClosed = new Vector3(0f, -7f, -5f);
@@ -24,21 +25,31 @@ public class PapperBoxMover : MonoBehaviour
     [Tooltip("展开状态（paperPosition = true）时的本地坐标")]
     public Vector3 positionOpen = new Vector3(0f, 0f, -5f);
 
-    [Tooltip("移动速度")]
-    public float moveSpeed = 20f;
+    [Tooltip("输出区域在 GameObjectRegistry 里的 ID")]
+    public int OutputRectId = 1001;
 
-    [Header("调试")]
-    [Tooltip("是否保留 Slash 键切换（方便测试，可关掉）")]
-    public bool allowKeyboardToggle = true;
+    [Tooltip("展开状态下的顶部边距")]
+    public float TopMarginOpen = 120f;
+
+    [Tooltip("收起状态下的顶部边距")]
+    public float TopMarginClosed = 820f;
+
+    [Tooltip("纸张盒子移动速度")]
+    public float paperMoveSpeed = 20f;
+
+    [Tooltip("输出区域改变速度")]
+    public float outputRectChangeSpeed = 2000f;
 
     // ---- 旋转状态 ----
     private Quaternion _startRotation;
-    private bool _isRotating;
+    private bool _isRotating = false;
 
     // ---- 移动状态 ----
     private bool _paperPosition = false;
-    private Transform _paperMover;
-    private Vector3 _targetPosition;
+    private Transform _paperTransform;
+    private RectTransform _outputRect;
+    private Vector3 _targetPaperPosition;
+    private float _targetOutputRectTopMargin;
 
     private void Awake()
     {
@@ -48,24 +59,30 @@ public class PapperBoxMover : MonoBehaviour
 
     private void Start()
     {
-        _paperMover = ScenePropertyRegistry.GetInstance<Transform>(paperMoverId);
+        _paperTransform = GameBootstrap.GetComponentById<Transform>(paperMoverId);
+        _outputRect = GameBootstrap.GetComponentById<RectTransform>(OutputRectId);
         // 初始处于收起状态
-        _targetPosition = positionClosed;
+        _targetPaperPosition = positionClosed;
+        _targetOutputRectTopMargin = TopMarginClosed;
+        if (_paperTransform != null)
+            _paperTransform.localPosition = _targetPaperPosition;
+        if (_outputRect != null)
+            _outputRect.offsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
     }
 
     private void Update()
     {
-        // 保留原来的键盘测试入口（可选）
-        if (allowKeyboardToggle && Input.GetKeyDown(KeyCode.Slash))
+        // 每帧朝当前目标逐步移动
+        if (_paperTransform != null)
         {
-            TogglePaperPosition();
+            _paperTransform.localPosition = Vector3.MoveTowards(
+                _paperTransform.localPosition, _targetPaperPosition, paperMoveSpeed * Time.deltaTime);
         }
 
-        // 每帧朝当前目标逐步移动
-        if (_paperMover != null)
+        if (_outputRect != null)
         {
-            _paperMover.localPosition = Vector3.MoveTowards(
-                _paperMover.localPosition, _targetPosition, moveSpeed * Time.deltaTime);
+            var targetOffsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
+            _outputRect.offsetMax = Vector2.MoveTowards(_outputRect.offsetMax, targetOffsetMax, outputRectChangeSpeed * Time.deltaTime);
         }
     }
 
@@ -85,7 +102,8 @@ public class PapperBoxMover : MonoBehaviour
     private void TogglePaperPosition()
     {
         _paperPosition = !_paperPosition;
-        _targetPosition = _paperPosition ? positionOpen : positionClosed;
+        _targetPaperPosition = _paperPosition ? positionOpen : positionClosed;
+        _targetOutputRectTopMargin = _paperPosition ? TopMarginOpen : TopMarginClosed;
     }
 
     private IEnumerator RotateRoutine()

@@ -29,15 +29,17 @@ namespace Hyperplasia.Runtime
         public GameData GameData;
 
         [Header("打字机界面")]
-        [SerializeField] private TyperPresenter _typerPresenter;
+        [SerializeField] private TyperPresenter _typerPresenter = new TyperPresenter();
 
         [Header("世界表现")]
-        [SerializeField] private WorldPresenter _worldPresenter;
+        [SerializeField] private WorldPresenter _worldPresenter = new WorldPresenter();
 
         private GameSession _session;
         private InputController _controller;
         private ITextInputSource _inputSource;
         private UnityCoreLogSink _coreLogSink;
+
+        private bool _isSingletonOwner;
 
 
         private void Awake()
@@ -48,12 +50,27 @@ namespace Hyperplasia.Runtime
                 return;
             }
             Instance = this;
+            _isSingletonOwner = true;
+            DontDestroyOnLoad(gameObject);
 
             _coreLogSink = new UnityCoreLogSink();
             CoreLog.Enabled = Application.isEditor || Debug.isDebugBuild;
             CoreLog.Sink = _coreLogSink.Write;
 
-            Build();
+            try
+            {
+                Build();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[GameBootstrap] 构建失败: {ex}");
+                TeardownInput();
+                CoreLog.Sink = null;
+                CoreLog.Enabled = false;
+                Instance = null;
+                _isSingletonOwner = false;
+                throw;
+            }
         }
 
         private void Update()
@@ -65,9 +82,12 @@ namespace Hyperplasia.Runtime
 
         private void OnDestroy()
         {
+            if (!_isSingletonOwner) return;
+            
             if (Instance == this)
             {
                 Instance = null;
+                _isSingletonOwner = false;
                 CoreLog.Sink = null;
                 CoreLog.Enabled = false;
             }
@@ -119,21 +139,22 @@ namespace Hyperplasia.Runtime
 
         private void HookTyperEvents()
         {
-            Session.TyperEngine.FeedbackRaised += _typerPresenter.OnFeedback;
-            Session.TyperEngine.FirstWordCommitted += _typerPresenter.OnFirstWord;
-            Session.TyperEngine.SecondWordCommitted += _typerPresenter.OnSecondWord;
-            Session.TyperEngine.CandidatesChanged += _typerPresenter.OnCandidatesChanged;
-            Session.TyperEngine.InspectionRaised += _typerPresenter.OnInspection;
+            if (_session == null || _typerPresenter == null) return;
+            _session.TyperEngine.FeedbackRaised += _typerPresenter.OnFeedback;
+            _session.TyperEngine.FirstWordCommitted += _typerPresenter.OnFirstWord;
+            _session.TyperEngine.SecondWordCommitted += _typerPresenter.OnSecondWord;
+            _session.TyperEngine.CandidatesChanged += _typerPresenter.OnCandidatesChanged;
+            _session.TyperEngine.InspectionRaised += _typerPresenter.OnInspection;
         }
 
         private void UnhookTyperEvents()
         {
-            if (Session == null || _typerPresenter == null) return;
-            Session.TyperEngine.FeedbackRaised -= _typerPresenter.OnFeedback;
-            Session.TyperEngine.FirstWordCommitted -= _typerPresenter.OnFirstWord;
-            Session.TyperEngine.SecondWordCommitted -= _typerPresenter.OnSecondWord;
-            Session.TyperEngine.CandidatesChanged -= _typerPresenter.OnCandidatesChanged;
-            Session.TyperEngine.InspectionRaised -= _typerPresenter.OnInspection;
+            if (_session == null || _typerPresenter == null) return;
+            _session.TyperEngine.FeedbackRaised -= _typerPresenter.OnFeedback;
+            _session.TyperEngine.FirstWordCommitted -= _typerPresenter.OnFirstWord;
+            _session.TyperEngine.SecondWordCommitted -= _typerPresenter.OnSecondWord;
+            _session.TyperEngine.CandidatesChanged -= _typerPresenter.OnCandidatesChanged;
+            _session.TyperEngine.InspectionRaised -= _typerPresenter.OnInspection;
         }
     }
 }
