@@ -104,7 +104,7 @@ public class PackBagButtonTrigger : MonoBehaviour
         {
             StopCoroutine(currentRoutine);
             currentRoutine = null;
-            if (bagTransform != null) bagTransform.position = targetPosition;
+            if (bagTransform != null) bagTransform.localPosition = targetPosition;
         }
         isBusy = false;
     }
@@ -116,9 +116,9 @@ public class PackBagButtonTrigger : MonoBehaviour
         try
         {
             if (Vector3.Distance(bagTransform.position, targetPosition) < shakeMagnitude * 2f)
-                bagTransform.position = targetPosition;
+                bagTransform.localPosition = targetPosition;
 
-            while (Vector3.Distance(bagTransform.position, checkPoint) > 0.01f)
+            while (Vector3.Distance(bagTransform.localPosition, checkPoint) > 0.01f)
             {
                 if (frameTransform != null)
                 {
@@ -126,12 +126,12 @@ public class PackBagButtonTrigger : MonoBehaviour
                         frameTransform.localPosition, Vector3.zero, moveSpeed * Time.deltaTime / 5f);
                 }
 
-                bagTransform.position = Vector3.MoveTowards(
-                    bagTransform.position, checkPoint, moveSpeed * Time.deltaTime);
+                bagTransform.localPosition = Vector3.MoveTowards(
+                    bagTransform.localPosition, checkPoint, moveSpeed * Time.deltaTime);
                 yield return null;
             }
 
-            bagTransform.position = checkPoint;
+            bagTransform.localPosition = checkPoint;
         }
         finally
         {
@@ -144,10 +144,10 @@ public class PackBagButtonTrigger : MonoBehaviour
     {
         try
         {
-            if (Vector3.Distance(bagTransform.position, targetPosition) < shakeMagnitude * 2f)
-                bagTransform.position = targetPosition;
+            if (Vector3.Distance(bagTransform.localPosition, targetPosition) < shakeMagnitude * 2f)
+                bagTransform.localPosition = targetPosition;
 
-            while (Vector3.Distance(bagTransform.position, targetPosition) > 0.01f)
+            while (Vector3.Distance(bagTransform.localPosition, targetPosition) > 0.01f)
             {
                 if (frameTransform != null)
                 {
@@ -155,11 +155,11 @@ public class PackBagButtonTrigger : MonoBehaviour
                         frameTransform.localPosition, new Vector3(0f, -1f, 0f), moveSpeed * Time.deltaTime / 5f);
                 }
 
-                bagTransform.position = Vector3.MoveTowards(
-                    bagTransform.position, targetPosition, moveSpeed * Time.deltaTime);
+                bagTransform.localPosition = Vector3.MoveTowards(
+                    bagTransform.localPosition, targetPosition, moveSpeed * Time.deltaTime);
                 yield return null;
             }
-            bagTransform.position = targetPosition;
+            bagTransform.localPosition = targetPosition;
 
             if (enableShake)
             {
@@ -176,11 +176,11 @@ public class PackBagButtonTrigger : MonoBehaviour
                     float ny = Mathf.PerlinNoise(seed + 50f, elapsed * shakeFrequency) * 2f - 1f;
 
                     Vector3 offset = Vector3.Scale(new Vector3(nx, ny, 0f), shakeAxis);
-                    bagTransform.position = targetPosition + offset * shakeMagnitude * damping;
+                    bagTransform.localPosition = targetPosition + offset * shakeMagnitude * damping;
                     yield return null;
                 }
 
-                bagTransform.position = targetPosition;
+                bagTransform.localPosition = targetPosition;
             }
         }
         finally

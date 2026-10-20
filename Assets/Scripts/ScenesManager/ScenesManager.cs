@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Hyperplasia.Runtime;
 using UnityEngine;
 
 public class ScenesManager : MonoBehaviour

@@ -14718,7 +14718,8 @@ GameObject:
   - component: {fileID: 1164822138}
   - component: {fileID: 1164822139}
   - component: {fileID: 1164822141}
-  - component: {fileID: 1164822142}
+  - component: {fileID: 1164822143}
+  - component: {fileID: 1164822144}
   m_Layer: 0
   m_Name: t_1
   m_TagString: Untagged
@@ -14833,7 +14834,28 @@ MonoBehaviour:
   floatProps:
   - key: HowMany
     value: 1
---- !u!114 &1164822142
+--- !u!95 &1164822143
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164822137}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6932a9772699447468ba59f6d16a9d03, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1164822144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14842,10 +14864,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1164822137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6a1c9d47b24e8fa5c2d0e71b4f8a63, type: 3}
+  m_Script: {fileID: 11500000, guid: 132ffeab23e7f4f4785adb3107c65355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  moveSpeed: 6
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  isMovingParam: isMoving
+  waitForAnimationBeforeMove: 1
 --- !u!1 &1175793972
 GameObject:
   m_ObjectHideFlags: 0
@@ -22848,14 +22874,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameData: {fileID: 11400000, guid: 90ef0d02601474e42ad3c2941d0337b0, type: 2}
-  DraftLine: {fileID: 1804376032}
-  HistoryText: {fileID: 758180526}
-  CandidatesRoot: {fileID: 1087504258}
-  CandidateTemplate: {fileID: 1825195065}
-  CommittedTemplate: {fileID: 2096765367}
-  ConfirmedRoot: {fileID: 1934050182}
-  InputRoot: {fileID: 2038529068}
-  characterMover: {fileID: 1164822142}
+  Typer:
+    DraftLine: {fileID: 0}
+    HistoryText: {fileID: 0}
+    CandidatesRoot: {fileID: 0}
+    CandidateTemplate: {fileID: 0}
+    ConfirmedTemplate: {fileID: 0}
+    ConfirmedRoot: {fileID: 0}
+    InputRoot: {fileID: 0}
+  World:
+    CharacterMover: {fileID: 0}
 --- !u!4 &1795975168
 Transform:
   m_ObjectHideFlags: 0
