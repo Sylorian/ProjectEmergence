@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Hyperplasia.Core.Data;
+
+
 
 namespace Hyperplasia.Core.Flow
 {
@@ -22,12 +25,18 @@ namespace Hyperplasia.Core.Flow
         public int Ink { get { return _ink; } set { _ink = value; InkChanged?.Invoke(_ink); } }
         public event Action<int> InkChanged;
 
-        private float _growth;
+        [Range(0f, 1f)] private float _growth;
         /// <summary>
         /// 当前增生值。
         /// </summary>
         public float Growth { get { return _growth; } set { _growth = value; GrowthChanged?.Invoke(_growth); } }
         public event Action<float> GrowthChanged;
+
+
+        private int _violence;
+        public int Violence { get { return _violence; } set { _violence = value; ViolenceChanged?.Invoke(_violence); } }
+        public event Action<int> ViolenceChanged;
+
 
         /// <summary>初始实体状态取自 GameDatabase；startRoom 缺省取第一个实体的房间。</summary>
         public GameSession(GameDatabase db)
@@ -38,6 +47,12 @@ namespace Hyperplasia.Core.Flow
             CurrentRoom = GameConfig.START_ROOM;
             Ink = GameConfig.START_INK;
             Growth = GameConfig.START_GROWTH;
+            Violence = GameConfig.START_VIOLENCE;
+        }
+
+        public void FixedUpdate(float dt)
+        {
+            Growth += GameConfig.GROWTH_INCREASE_BASE_RATE * MathF.Pow(2, Violence - 1) * dt;
         }
 
         public bool TryGetEntity(int id, out Entity entity)
