@@ -8,8 +8,6 @@ namespace Hyperplasia.Core.Flow.States
     /// </summary>
     public sealed class ExploreState : IInputState
     {
-        private static readonly WordCandidate[] NoCandidates = Array.Empty<WordCandidate>();
-        private static readonly int[] NoIds = Array.Empty<int>();
 
         private readonly InputController _c;
 
@@ -23,11 +21,10 @@ namespace Hyperplasia.Core.Flow.States
         public void Enter()
         {
             _c.Router.TypingEnabled = false;
-            _c.Buffer.Clear();
-            _c.SetCandidates(NoCandidates);
-            _c.SetHighlight(NoIds);
-            _c.ClearFirstWord();
-            _c.ResetTarget();
+            _c.TyperEngine.Buffer.Clear();
+            _c.TyperEngine.ClearCandidates();
+            _c.TyperEngine.ClearFirstWord();
+            _c.TyperEngine.ResetSecondWord();
         }
 
         public void OnText(string text)
@@ -46,10 +43,10 @@ namespace Hyperplasia.Core.Flow.States
                     _c.TransitionTo(InputState.FirstWord);
                     break;
                 case InputCommand.MoveLeft:
-                    _c.RequestMove(-1f);
+                    _c.RequestCharacterMove(-1f);
                     break;
                 case InputCommand.MoveRight:
-                    _c.RequestMove(1f);
+                    _c.RequestCharacterMove(1f);
                     break;
             }
         }

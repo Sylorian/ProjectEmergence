@@ -37,7 +37,7 @@ namespace Hyperplasia.Core.Flow
             _db = db ?? new GameDatabase();
         }
 
-        public ResolveResult Resolve(int verbId, int entityId, GameState state)
+        public ResolveResult Resolve(int verbId, int entityId, GameSession state)
         {
             var result = new ResolveResult();
 
@@ -93,7 +93,7 @@ namespace Hyperplasia.Core.Flow
         }
 
         /// <summary>某动词当前可操作的目标实体（任一规则 target 命中），供状态 2 高亮用。</summary>
-        public List<Entity> GetCandidateTargets(int verbId, GameState state)
+        public List<Entity> GetCandidateTargets(int verbId, GameSession state)
         {
             var list = new List<Entity>();
             if (!_db.RulesByVerb.TryGetValue(verbId, out List<Rule> rules)) return list;

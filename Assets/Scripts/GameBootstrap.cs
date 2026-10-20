@@ -7,6 +7,7 @@ using Hyperplasia.Input;
 using Hyperplasia.View;
 using Hyperplasia.World;
 using Hyperplasia.Bridge;
+using Hyperplasia.Presenter;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,49 +15,36 @@ using UnityEngine.UI;
 namespace Hyperplasia.Runtime
 {
     /// <summary>
-    /// 组装层：加载 JSON → GameDatabase / GameState / WordLibrary / ResolveEngine → InputController → 驱动 UI。
-    /// 候选词用 CandidateTemplate 克隆；已确认词用 CommittedTemplate 克隆到 ConfirmedRoot（输入框左边）。
+    /// 组装层
     /// </summary>
     [DisallowMultipleComponent]
     public class GameBootstrap : MonoBehaviour
     {
-        [Header("数据")]
-        [Tooltip("处理后的数据（含拼音），如 game_data_sample_processed.json")]
+        public static GameBootstrap Instance { get; private set; }
+
+        [Header("数据源")]
+        [Tooltip("处理后的数据SO资产")]
         public GameData GameData;
 
-        [Header("界面")]
-        public DraftLineView DraftLine;
-        public TextMeshProUGUI HistoryText;
-        public RectTransform CandidatesRoot;
-        public WordCandidateView CandidateTemplate;
-        [Tooltip("已确认词芯片模板（ConfirmedWord）")]
-        public ConfirmedWordView CommittedTemplate;
-        [Tooltip("已确认词芯片容器（Input/Confirmed）；留空自动取模板父节点")]
-        public RectTransform ConfirmedRoot;
-        [Tooltip("可选：整个 Input 容器；草稿行按状态显示/隐藏它")]
-        public GameObject InputRoot;
+        [Header("打字机界面")]
+        public TyperPresenter Typer;
 
-        [Header("角色")]
-        public CharacterMover characterMover;
+        [Header("世界表现")]
+        public WorldPresenter World;
 
+        public GameSession Session { get; private set; }
         public InputController Controller { get; private set; }
         public ITextInputSource Source { get; private set; }
 
-        /// <summary>
-        /// 状态 2 高亮目标变化（实体 id）。现在与 ScenePropertyRegistry / HighlightAnimate
-        /// 同属 Hyperplasia.Gameplay，订阅方可以直接驱动高亮。
-        /// </summary>
-        public event Action<IReadOnlyList<int>> HighlightChanged;
-
-        public IReadOnlyList<int> CurrentHighlight { get { return _highlight; } }
-
-        private readonly List<WordCandidateView> _candidateButtons = new List<WordCandidateView>();
-        private readonly List<ConfirmedWordView> _confirmedChips = new List<ConfirmedWordView>();
-        private readonly List<string> _history = new List<string>();
-        private readonly List<int> _highlight = new List<int>();
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
             Build();
         }
 
@@ -64,19 +52,15 @@ namespace Hyperplasia.Runtime
         {
             if (Controller == null) return;
             Controller.Update(Time.unscaledTime);
-            UpdateInputVisibility();
+            Typer.UpdateInputVisibility(Controller.State);
         }
 
         private void OnDestroy()
         {
-            if (Controller != null)
-            {
-                Controller.FeedbackRaised -= OnFeedback;
-                Controller.FirstWordCommitted -= OnFirstWord;
-                Controller.CandidatesChanged -= OnCandidates;
-                Controller.HighlightChanged -= OnHighlightChanged;
-                Controller.TargetCommitted -= OnTarget;
-            }
+            if (Instance == this)
+                Instance = null;
+
+            UnhookTyperEvents();
             TeardownInput();
         }
 
@@ -84,29 +68,19 @@ namespace Hyperplasia.Runtime
         {
             EnsureInput();
 
-            GameDatabase db = LoadDatabase();
-            var world = new GameState(db);
-            var library = new WordLibrary(db);
-            var resolver = new ResolveEngine(db);
+            Session = new GameSession(LoadDatabase());
+            Controller = new InputController(Source, Session);
 
-            Controller = new InputController(Source, db, world, library, resolver);
+            Typer.Engine = Session.Typer;
 
-            if (DraftLine != null) DraftLine.Controller = Controller;
-            if (characterMover != null) characterMover.SetController(Controller);
+            if (Typer.Engine == null || Typer.DraftLine == null)
+                Debug.LogError("[GameBootstrap] Typer/World 引用不完整，请检查 Inspector 绑定。");
 
-            HookController();
-            PrepareCandidates();
-            PrepareConfirmedWords();
-            RefreshConfirmedWords();
-            UpdateInputVisibility();
-        }
+            if (Typer.DraftLine != null) Typer.DraftLine.Controller = Controller;
+            if (World.CharacterMover != null) World.CharacterMover.SetController(Controller);
 
-        /// <summary>状态 0 隐藏输入条；状态 1/2/3 显示（状态 4 会立即回 0）。</summary>
-        private void UpdateInputVisibility()
-        {
-            InputState state = Controller.State;
-            bool showInput = state == InputState.FirstWord || state == InputState.SecondWord || state == InputState.InspectItem;
-            if (InputRoot != null && InputRoot.activeSelf != showInput) InputRoot.SetActive(showInput);
+            HookTyperEvents();
+            Typer.PrepareTyper(InputState.Explore);
         }
 
         private void EnsureInput()
@@ -132,118 +106,21 @@ namespace Hyperplasia.Runtime
             return new GameDatabase();
         }
 
-        private void HookController()
+        private void HookTyperEvents()
         {
-            Controller.FeedbackRaised += OnFeedback;
-            Controller.FirstWordCommitted += OnFirstWord;
-            Controller.TargetCommitted += OnTarget;
-            Controller.CandidatesChanged += OnCandidates;
-            Controller.HighlightChanged += OnHighlightChanged;
+            Session.Typer.FeedbackRaised += Typer.OnFeedback;
+            Session.Typer.FirstWordCommitted += Typer.OnFirstWord;
+            Session.Typer.SecondWordCommitted += Typer.OnSecondWord;
+            Session.Typer.CandidatesChanged += Typer.OnCandidatesChanged;
         }
 
-        private void OnFeedback(string text)
+        private void UnhookTyperEvents()
         {
-            if (string.IsNullOrEmpty(text)) return;
-            _history.Add(text);
-            if (HistoryText != null) HistoryText.SetText(string.Join("\n", _history.ToArray()));
-        }
-
-        private void OnFirstWord(WordCandidate word)
-        {
-            RefreshConfirmedWords();
-        }
-
-        private void OnTarget(WordCandidate word)
-        {
-            RefreshConfirmedWords();
-        }
-
-        private void OnHighlightChanged(IReadOnlyList<int> ids)
-        {
-            _highlight.Clear();
-            if (ids != null)
-                for (int i = 0; i < ids.Count; i++) _highlight.Add(ids[i]);
-            HighlightChanged?.Invoke(_highlight);
-        }
-
-        private void OnCandidates(IReadOnlyList<WordCandidate> list)
-        {
-            RefreshCandidates(list);
-        }
-
-        private void PrepareCandidates()
-        {
-            if (CandidateTemplate == null) return;
-            if (CandidatesRoot == null) CandidatesRoot = CandidateTemplate.transform.parent as RectTransform;
-            CandidateTemplate.gameObject.SetActive(false);
-        }
-
-        private void RefreshCandidates(IReadOnlyList<WordCandidate> list)
-        {
-            if (CandidateTemplate == null) return;
-            int count = list == null ? 0 : list.Count;
-
-            while (_candidateButtons.Count < count)
-            {
-                var c = Instantiate(CandidateTemplate, CandidatesRoot);
-                c.gameObject.SetActive(true);
-                c.Subscribe(() => Controller.SelectCandidate(_candidateButtons.IndexOf(c)));
-                _candidateButtons.Add(c);
-            }
-
-            for (int i = 0; i < _candidateButtons.Count; i++)
-            {
-                bool active = i < count;
-                WordCandidateView c = _candidateButtons[i];
-                if (c.gameObject.activeSelf != active) c.gameObject.SetActive(active);
-                if (!active) continue;
-                c.SetLabel(list[i].Text);
-            }
-        }
-
-        /// <summary>ConfirmedWord 只作模板：运行时隐藏，按确认词克隆芯片。</summary>
-        private void PrepareConfirmedWords()
-        {
-            if (CommittedTemplate == null) return;
-            if (ConfirmedRoot == null) ConfirmedRoot = CommittedTemplate.transform.parent as RectTransform;
-            CommittedTemplate.gameObject.SetActive(false);
-        }
-
-        /// <summary>
-        /// 按 Controller 里已确认的词刷新芯片，顺序 [第一词][目标词]，
-        /// 放在输入框左边的 Confirmed 横向容器里。
-        /// </summary>
-        private void RefreshConfirmedWords()
-        {
-            if (CommittedTemplate == null) return;
-
-            int count = 0;
-            if (Controller.FirstWord != null) count++;
-            if (Controller.TargetWord != null) count++;
-
-            while (_confirmedChips.Count < count)
-            {
-                ConfirmedWordView chip = Instantiate(CommittedTemplate, ConfirmedRoot);
-                chip.gameObject.SetActive(true);
-                _confirmedChips.Add(chip);
-            }
-
-            int index = 0;
-            if (Controller.FirstWord != null)
-            {
-                ConfirmedWordView chip = _confirmedChips[index++];
-                chip.gameObject.SetActive(true);
-                chip.SetLabel(Controller.FirstWord.Text);
-            }
-            if (Controller.TargetWord != null)
-            {
-                ConfirmedWordView chip = _confirmedChips[index++];
-                chip.gameObject.SetActive(true);
-                chip.SetLabel(Controller.TargetWord.Text);
-            }
-
-            for (int i = index; i < _confirmedChips.Count; i++)
-                _confirmedChips[i].gameObject.SetActive(false);
+            if (Session == null || Typer == null) return;
+            Session.Typer.FeedbackRaised -= Typer.OnFeedback;
+            Session.Typer.FirstWordCommitted -= Typer.OnFirstWord;
+            Session.Typer.SecondWordCommitted -= Typer.OnSecondWord;
+            Session.Typer.CandidatesChanged -= Typer.OnCandidatesChanged;
         }
     }
 }

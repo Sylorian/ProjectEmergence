@@ -15,7 +15,6 @@ namespace Hyperplasia.Core.Flow.States
         private static readonly int[] NoIds = Array.Empty<int>();
 
         private readonly InputController _c;
-        private readonly List<WordCandidate> _candidates = new List<WordCandidate>();
         private int _selected;
 
         public SecondWordState(InputController c)
@@ -28,17 +27,16 @@ namespace Hyperplasia.Core.Flow.States
         public void Enter()
         {
             _c.Router.TypingEnabled = true;
-            _c.Buffer.Clear();
-            _c.ResetTarget();   // 清掉目标芯片（第一词芯片保留）
+            _c.TyperEngine.Buffer.Clear();
+            _c.TyperEngine.ResetSecondWord();   // 清掉目标芯片（第一词芯片保留）
             _selected = 0;
             Refresh();
-            RefreshHighlight();
         }
 
         public void OnText(string text)
         {
-            _c.Buffer.Append(text);
-            _c.ResetTarget();   // 重新输入 → 取消已选目标
+            _c.TyperEngine.Buffer.Append(text);
+            _c.TyperEngine.ResetSecondWord();
             Refresh();
         }
 
@@ -52,36 +50,34 @@ namespace Hyperplasia.Core.Flow.States
             switch (command)
             {
                 case InputCommand.Confirm:   // 空格：选中名词 → 生成芯片
-                    Select(_candidates.Count > 0 ? _selected : 0);
+                    Select(_c.TyperEngine.Candidates.Count > 0 ? _selected : 0);
                     break;
                 case InputCommand.Submit:    // 回车：提交已选目标
                     Submit();
                     break;
                 case InputCommand.Cancel:    // Esc → 回状态 0
-                    _c.Buffer.Clear();
-                    _c.SetCandidates(NoCandidates);
-                    _c.SetHighlight(NoIds);
-                    _c.ClearFirstWord();
-                    _c.ResetTarget();
+                    _c.TyperEngine.Buffer.Clear();
+                    _c.TyperEngine.ClearCandidates();
+                    _c.TyperEngine.ClearFirstWord();
+                    _c.TyperEngine.ResetSecondWord();
                     _c.TransitionTo(InputState.Explore);
                     break;
                 case InputCommand.Backspace:
-                    if (_c.Buffer.Backspace())
+                    if (_c.TyperEngine.Buffer.Backspace())
                     {
-                        _c.ResetTarget();
+                        _c.TyperEngine.ResetSecondWord();
                         Refresh();
                     }
-                    else if (_c.TargetWord != null)
+                    else if (_c.TyperEngine.SecondWord != null)
                     {
                         // 先撤销第二词（移除芯片），仍留在 SecondWord
-                        _c.ResetTarget();
+                        _c.TyperEngine.ResetSecondWord();
                         Refresh();
                     }
                     else
                     {
                         // Draft 为空且没有第二词 → 回退到 FirstWord，清除第一词芯片
-                        _c.SetCandidates(NoCandidates);
-                        _c.SetHighlight(NoIds);
+                        _c.TyperEngine.ClearCandidates();
                         _c.TransitionTo(InputState.FirstWord);
                     }
                     break;
@@ -94,47 +90,31 @@ namespace Hyperplasia.Core.Flow.States
 
         private void Refresh()
         {
-            _candidates.Clear();
-            List<WordCandidate> found = _c.Library.GetCandidates(_c.Buffer.Text);
-            foreach (var candidate in found)
-                if (candidate.Kind == WordKind.Noun) _candidates.Add(candidate);
-
-            if (_selected >= _candidates.Count) _selected = 0;
-            _c.SetCandidates(_candidates);
+            _c.TyperEngine.MatchAndStoreCandidates();
         }
 
-        private void RefreshHighlight()
-        {
-            var ids = new List<int>();
-            List<Entity> targets = _c.Resolver.GetCandidateTargets(_c.FirstWordId, _c.World);
-            for (int i = 0; i < targets.Count; i++)
-                if (IsReachable(targets[i].Id)) ids.Add(targets[i].Id);
-            _c.SetHighlight(ids);
-        }
-
-        /// <summary>选中名词：生成 Confirmed 芯片，清空草稿与候选，等待回车提交。</summary>
         private void Select(int index)
         {
-            if (_candidates.Count == 0) return;
-            if (index < 0 || index >= _candidates.Count) index = 0;
+            var candidates = _c.TyperEngine.Candidates;
+            if (candidates.Count == 0) return;
+            if (index < 0 || index >= candidates.Count) index = 0;
             _selected = index;
 
-            _c.CommitTarget(_candidates[index]);
-            _c.Buffer.Clear();
-            _c.SetCandidates(NoCandidates);
+            _c.TyperEngine.CommitSecondWord(candidates[index]);
+            _c.TyperEngine.Buffer.Clear();
+            _c.TyperEngine.ClearCandidates();
         }
 
         private void Submit()
         {
-            WordCandidate target = _c.TargetWord;
-            if (target == null || target.Kind != WordKind.Noun || !IsReachable(target.Id))
+            WordCandidate secondWord = _c.TyperEngine.SecondWord;
+            if (secondWord == null || secondWord.Kind != WordKind.Noun || !IsReachable(secondWord.Id))
             {
-                _c.RaiseFeedback("似乎没看见这个东西");
+                _c.TyperEngine.RaiseFeedback("似乎没看见这个东西");
                 return;
             }
 
-            _c.SetCandidates(NoCandidates);
-            _c.SetHighlight(NoIds);
+            _c.TyperEngine.ClearCandidates();
             _c.TransitionTo(InputState.Resolve);
         }
 
@@ -142,8 +122,8 @@ namespace Hyperplasia.Core.Flow.States
         private bool IsReachable(int id)
         {
             if (id < 0) return false;
-            if (!_c.Database.EntityById.TryGetValue(id, out Entity e)) return false;
-            return e.Room == _c.World.CurrentRoom;
+            if (!_c.Session.Database.EntityById.TryGetValue(id, out Entity e)) return false;
+            return e.Room == _c.Session.CurrentRoom;
         }
     }
 }
