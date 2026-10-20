@@ -42,9 +42,6 @@ public class ScenesManager : MonoBehaviour
         "BedroomObject","StoreroomObject","LivingroomObject","HallwayObject","KitchenObject","WashroomObject"
     };
 
-    private int[] sortnum = new int[] { -3, -2, -1, 0, 1, 2 };
-    private int sortstart = 3;
-
     private int currentIndex;
     private float targetX;
     private float velocityX;
