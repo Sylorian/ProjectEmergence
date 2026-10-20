@@ -25,6 +25,8 @@ namespace Hyperplasia.Core.Flow
         public event Action<WordCandidate> FirstWordCommitted;  // 当第一词提交时触发
         public event Action<WordCandidate> SecondWordCommitted;  // 当第二词提交时触发
         public event Action<string> InspectionRaised;  // 当检查信息触发时触发
+
+        public event Action OrangeOutline;
         public event Action<ResolveResult> Resolved;  // 当解析结果触发时触发
         public IReadOnlyList<WordCandidate> Candidates { get { return _candidates; } }
 
@@ -122,5 +124,12 @@ namespace Hyperplasia.Core.Flow
             Resolved?.Invoke(result);
         }
 
+        public void SetOutline()
+        {
+            OrangeOutline?.Invoke();
+        }
+
+        
+        
     }
 }

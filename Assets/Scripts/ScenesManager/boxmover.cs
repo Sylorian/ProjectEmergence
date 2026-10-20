@@ -22,9 +22,6 @@ public class boxmover : MonoBehaviour
     [Tooltip("到达终点后停留时长（仅 Begin() 完整流程时生效）")]
     public float holdAtEnd = 0f;
 
-    [Header("其它")]
-    public bool playOnStart = true;
-
     public bool IsFinished { get; private set; }      // 完整流程结束
     public bool IsRightFinished { get; private set; } // 右移已到达终点
     public bool IsMovingRight => state == State.MovingRight;
@@ -45,12 +42,6 @@ public class boxmover : MonoBehaviour
         endLocalPos = startLocalPos + moveDirection.normalized * distance;
         leftStartPos = endLocalPos;
     }
-
-    void Start()
-    {
-        if (playOnStart) Begin();
-    }
-
     void Update()
     {
         switch (state)
