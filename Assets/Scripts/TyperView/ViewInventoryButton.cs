@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Hyperplasia.Runtime;
 
 /// <summary>
 /// 融合版：挂在按钮对象上（需要有 Collider2D 才能响应 OnMouseDown）。
@@ -8,7 +9,7 @@ using Random = UnityEngine.Random;
 /// 位移目标从场景里按 Key 取：0008 = 背包主体，0007 = frame。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-public class PackBagButtonTrigger : MonoBehaviour
+public class ViewInventoryButton : MonoBehaviour
 {
     [Header("场景对象 Key")]
     [SerializeField] private string bagKey   = "0008";  // 原 PackBagMover 挂载对象
@@ -54,7 +55,7 @@ public class PackBagButtonTrigger : MonoBehaviour
 
         if (bagTransform == null)
         {
-            Debug.LogError($"[{nameof(PackBagButtonTrigger)}] 找不到场景对象 \"{bagKey}\"，脚本已禁用");
+            Debug.LogError($"[{nameof(ViewInventoryButton)}] 找不到场景对象 \"{bagKey}\"，脚本已禁用");
             enabled = false;
         }
     }
@@ -62,7 +63,7 @@ public class PackBagButtonTrigger : MonoBehaviour
     // 点击触发
     private void OnMouseDown()
     {
-        Trigger();
+        GameBootstrap.TyperPresenter.OnInventoryToggled(!isShow);
     }
 
     /// <summary>统一入口：旋转反馈 + 切换背包显隐</summary>
@@ -82,6 +83,22 @@ public class PackBagButtonTrigger : MonoBehaviour
         }
 
         StartCoroutine(RotateRoutine());
+    }
+
+    public void Toggle(bool open)
+    {
+        if (isBusy || isRotating) return;
+        if (open == isShow) return;
+        if (open)
+        {
+            isShow = true;
+            Play();
+        }
+        else
+        {
+            isShow = false;
+            Back();
+        }
     }
 
     public void Play()

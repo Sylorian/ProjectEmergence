@@ -1,5 +1,6 @@
 using System;
 using Hyperplasia.Runtime;
+using Hyperplasia.Core.Flow;
 using UnityEngine;
 
 
@@ -18,6 +19,8 @@ public class OrangeOutlineController : MonoBehaviour
     private static readonly int OutlineColorId = Shader.PropertyToID("_OutlineColor");
     private static readonly int OutlineWidthId = Shader.PropertyToID("_OutlineWidth");
 
+    private TyperEngine _typerEngine;
+
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -25,13 +28,15 @@ public class OrangeOutlineController : MonoBehaviour
 
     void OnEnable()
     {
-        GameBootstrap.TyperEngine.OrangeOutline += ApplyOutline;
+        _typerEngine = GameBootstrap.TyperEngine;
+        _typerEngine.OrangeOutline += ApplyOutline;
         Invoke(nameof(ApplyOutline), 0f);
     }
 
     void OnDisable()
     {
-        GameBootstrap.TyperEngine.OrangeOutline -= ApplyOutline;
+        if (_typerEngine != null)
+            _typerEngine.OrangeOutline -= ApplyOutline;
         CancelInvoke(nameof(ApplyOutline));
     }
 
@@ -82,7 +87,8 @@ public class OrangeOutlineController : MonoBehaviour
     void OnDestroy()
     {
         // 保险起见，如果 OnDisable 未正常执行也能退订
-        GameBootstrap.TyperEngine.OrangeOutline -= ApplyOutline;
+        if (_typerEngine != null)
+            _typerEngine.OrangeOutline -= ApplyOutline;
 
         // 清理动态创建的材质实例，防止内存泄漏
         if (_outlineMaterial != null)

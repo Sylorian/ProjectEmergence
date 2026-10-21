@@ -9,7 +9,7 @@ namespace Hyperplasia.Presenter
     [Serializable]
     public class WorldPresenter
     {
-        public CharacterMover CharacterMover;
+        public PlayerMover CharacterMover;
 
         public readonly Dictionary<int, GameObject> GameObjects = new Dictionary<int, GameObject>();
 

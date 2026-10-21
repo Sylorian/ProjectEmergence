@@ -27,6 +27,9 @@ namespace Hyperplasia.Core.Flow
         Backspace,
         MoveLeft,
         MoveRight,
+        Inventory,
+        ViewInk,
+        History
     }
 
     public static class TextNormalizer

@@ -70,11 +70,28 @@ namespace Hyperplasia.Core.Flow
             return _current is ICandidateSelector selector && selector.TrySelectCandidate(word);
         }
 
+        #region Requests
         public void RequestCharacterMove(float axis)
         {
             if (axis > 0f) MoveAxis = 1f;
             else if (axis < 0f) MoveAxis = -1f;
         }
 
+        public void RequestToggleInventory(bool open)
+        {
+            TyperEngine.ToggleInventory(open);
+        }
+
+        public void RequestToggleInk(bool open)
+        {
+            TyperEngine.ToggleInk(open);
+        }
+
+        public void RequestToggleHistory(bool open)
+        {
+            TyperEngine.ToggleHistory(open);
+        }
+
+        #endregion
     }
 }

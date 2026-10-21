@@ -24,6 +24,22 @@ namespace Hyperplasia.Utils
                 textComponent.SetText(text);
         }
 
+        public static void SetColor(TextMeshProUGUI textComponent, Color color)
+        {
+            if (textComponent != null)
+                textComponent.color = color;
+        }
+
+        public static void SetAlpha(TextMeshProUGUI textComponent, float alpha)
+        {
+            if (textComponent != null)
+            {
+                Color color = textComponent.color;
+                color.a = alpha;
+                textComponent.color = color;
+            }
+        }
+
         public static void Subscribe(Button button, UnityEngine.Events.UnityAction action)
         {
             if (button != null)

@@ -12,6 +12,12 @@ namespace Hyperplasia.Presenter
     [Serializable]
     public class TyperPresenter
     {
+        [Header("按钮布局")]
+        public ViewInventoryButton ViewInventoryButton;
+        public ViewHistoryButton ViewHistoryButton;
+        public ViewInkButton ViewInkButton;
+
+        [Header("纸面UI布局")]
         public DraftLineView DraftLine;
         public TextMeshProUGUI HistoryText;
         public RectTransform CandidatesRoot;
@@ -46,10 +52,34 @@ namespace Hyperplasia.Presenter
             UpdateInputVisibility(inputState);
         }
 
-        #region event_handlers
-        /// <summary>
-        /// 处理来自 TyperEngine 的反馈事件。
-        /// </summary>
+        #region event_handlers 处理来自 TyperEngine 的反馈事件。
+        public void OnInventoryToggled(bool open)
+        {
+            if (ViewInventoryButton != null)
+                ViewInventoryButton.Toggle(open);
+            if (ViewInkButton != null)
+                ViewInkButton.Toggle(false);
+            if (ViewHistoryButton != null)
+                ViewHistoryButton.Toggle(false);
+        }
+        public void OnInkToggled(bool open)
+        {
+            if (ViewInkButton != null)
+                ViewInkButton.Toggle(open);
+            if (ViewInventoryButton != null)
+                ViewInventoryButton.Toggle(false);
+            if (ViewHistoryButton != null)
+                ViewHistoryButton.Toggle(false);
+        }
+        public void OnHistoryToggled(bool open)
+        {
+            if (ViewHistoryButton != null)
+                ViewHistoryButton.Toggle(open);
+            if (ViewInventoryButton != null)
+                ViewInventoryButton.Toggle(false);
+            if (ViewInkButton != null)
+                ViewInkButton.Toggle(false);
+        }
         public void OnFeedback(string text)
         {
             if (string.IsNullOrEmpty(text)) return;

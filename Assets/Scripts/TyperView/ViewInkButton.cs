@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using Hyperplasia.Runtime;
+using Hyperplasia.Presenter;
 
 [RequireComponent(typeof(Collider2D))] // OnMouseDown 需要碰撞体
-public class ButtonitriggerforPackbag : MonoBehaviour
+public class ViewInkButton : MonoBehaviour
 {
     public enum DisableMode
     {
@@ -64,8 +66,13 @@ public class ButtonitriggerforPackbag : MonoBehaviour
 
     private void OnMouseDown()
     {
+        GameBootstrap.TyperPresenter.OnInkToggled(!_isOpen);
+    }
+
+    public void Toggle(bool open)
+    {
         if (_isRotating) return; // 旋转中不响应
-        _isOpen = !_isOpen;
+        _isOpen = open;
         StartCoroutine(TriggerRoutine(_isOpen));
     }
 

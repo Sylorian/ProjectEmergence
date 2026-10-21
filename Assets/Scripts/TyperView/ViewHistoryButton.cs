@@ -3,7 +3,7 @@ using UnityEngine;
 using Hyperplasia.Runtime;
 
 [RequireComponent(typeof(Collider2D))] // OnMouseDown 需要碰撞体
-public class PaperBoxMover : MonoBehaviour
+public class ViewHistoryButton : MonoBehaviour
 {
     [Header("旋转设置")]
     [Tooltip("点击后沿 X 轴旋转到多少度")]
@@ -46,6 +46,7 @@ public class PaperBoxMover : MonoBehaviour
 
     // ---- 移动状态 ----
     private bool _paperPosition = false;
+    private bool _initialized = false;
     private Transform _paperTransform;
     private RectTransform _outputRect;
     private Vector3 _targetPaperPosition;
@@ -59,19 +60,13 @@ public class PaperBoxMover : MonoBehaviour
 
     private void Start()
     {
-        _paperTransform = GameBootstrap.GetComponentById<Transform>(paperMoverId);
-        _outputRect = GameBootstrap.GetComponentById<RectTransform>(OutputRectId);
-        // 初始处于收起状态
-        _targetPaperPosition = positionClosed;
-        _targetOutputRectTopMargin = TopMarginClosed;
-        if (_paperTransform != null)
-            _paperTransform.localPosition = _targetPaperPosition;
-        if (_outputRect != null)
-            _outputRect.offsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
+        TryInitialize();
     }
 
     private void Update()
     {
+        if (!_initialized) TryInitialize();
+
         // 每帧朝当前目标逐步移动
         if (_paperTransform != null)
         {
@@ -86,10 +81,41 @@ public class PaperBoxMover : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 解析注册表中的纸张 / 输出区域并初始化到收起状态。
+    /// GameObjectRegistry 与 PaperBoxMover 的 Start 执行顺序不确定，
+    /// 所以允许在 Update 中重试，避免注册表尚未写入时引用永久为空。
+    /// </summary>
+    private void TryInitialize()
+    {
+        if (_paperTransform == null)
+            _paperTransform = GameBootstrap.GetComponentById<Transform>(paperMoverId);
+        if (_outputRect == null)
+            _outputRect = GameBootstrap.GetComponentById<RectTransform>(OutputRectId);
+
+        if (_initialized) return;
+        if (_paperTransform == null && _outputRect == null) return;
+
+        // 初始处于收起状态
+        _targetPaperPosition = positionClosed;
+        _targetOutputRectTopMargin = TopMarginClosed;
+        if (_paperTransform != null)
+            _paperTransform.localPosition = _targetPaperPosition;
+        if (_outputRect != null)
+            _outputRect.offsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
+
+        _initialized = true;
+    }
+
     private void OnMouseDown()
     {
+        GameBootstrap.TyperPresenter.OnHistoryToggled(!_paperPosition);
+    }
+
+    public void Toggle(bool open)
+    {
         // 切换纸张盒子位置
-        TogglePaperPosition();
+        TogglePaperPosition(open);
 
         // 触发旋转动画（正在旋转时忽略连点）
         if (!_isRotating)
@@ -99,9 +125,9 @@ public class PaperBoxMover : MonoBehaviour
     }
 
     /// <summary>切换纸张盒子的目标位置</summary>
-    private void TogglePaperPosition()
+    private void TogglePaperPosition(bool open)
     {
-        _paperPosition = !_paperPosition;
+        _paperPosition = open;
         _targetPaperPosition = _paperPosition ? positionOpen : positionClosed;
         _targetOutputRectTopMargin = _paperPosition ? TopMarginOpen : TopMarginClosed;
     }

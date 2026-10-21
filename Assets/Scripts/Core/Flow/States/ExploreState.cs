@@ -43,6 +43,15 @@ namespace Hyperplasia.Core.Flow.States
                 case InputCommand.MoveRight:
                     _c.RequestCharacterMove(1f);
                     break;
+                case InputCommand.Inventory:
+                    _c.RequestToggleInventory(true);
+                    break;
+                case InputCommand.ViewInk:
+                    _c.RequestToggleInk(true);
+                    break;
+                case InputCommand.History:
+                    _c.RequestToggleHistory(true);
+                    break;
             }
         }
 
