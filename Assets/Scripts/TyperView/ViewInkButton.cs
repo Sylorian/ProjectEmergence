@@ -1,9 +1,9 @@
-using System.Collections;
 using UnityEngine;
 using Hyperplasia.Runtime;
-using Hyperplasia.Presenter;
+using Hyperplasia.View;
 
 [RequireComponent(typeof(Collider2D))] // OnMouseDown 需要碰撞体
+[RequireComponent(typeof(ButtonPunch))]
 public class ViewInkButton : MonoBehaviour
 {
     public enum DisableMode
@@ -29,92 +29,71 @@ public class ViewInkButton : MonoBehaviour
     [Tooltip("CanvasEnabled 模式下，是否也控制 targetObject 自身的 Canvas（建议开启）")]
     public bool includeSelfCanvas = true;
 
-    [Header("旋转设置")]
-    [Tooltip("关闭状态时本地 Y 轴的角度（初始角度）")]
-    public float targetAngleY = 90f;
+    private ButtonPunch _punch;
 
-    [Tooltip("单程旋转时长（秒）")]
-    public float rotateDuration = 0.5f;
-
-    [Tooltip("是否使用平滑缓动，关闭则为匀速")]
-    public bool useEase = true;
-
-    private Quaternion _closedRotation;  // 关闭状态旋转（y = targetAngleY）
-    private Quaternion _openRotation;    // 打开状态旋转（y = 0）
-    private bool _isOpen;                // 当前是否处于展开状态（false = 关闭）
-    private bool _isRotating;            // 旋转中锁，防止连点打断
+    /// <summary>墨盒当前是否处于展开状态。</summary>
+    public bool IsOpen => _punch != null && _punch.IsOpen;
 
     private void Awake()
     {
-        if (rotateTarget == null) rotateTarget = targetObject;
+        // 旋转表现统一交给 ButtonPunch；这里只负责目标启停。
+        _punch = GetComponent<ButtonPunch>();
+        if (_punch == null)
+            _punch = gameObject.AddComponent<ButtonPunch>();
 
-        if (rotateTarget != null)
-        {
-            // 场景中初始旋转应为 y = 90°（关闭状态）
-            _closedRotation = rotateTarget.transform.localRotation;
-            // 打开状态：绕本地 Y 轴旋转 -targetAngleY（从 90° 转到 0°）
-            _openRotation = _closedRotation * Quaternion.Euler(0f, -targetAngleY, 0f);
+        Transform target = rotateTarget != null
+            ? rotateTarget.transform
+            : (targetObject != null ? targetObject.transform : null);
+        _punch.ConfigureFlip(target);
 
-            // 确保初始就是关闭角度
-            rotateTarget.transform.localRotation = _closedRotation;
-        }
+        _punch.FlipStarted += OnFlipStarted;
+        _punch.FlipFinished += OnFlipFinished;
 
         // 开始时禁用（Canvas 或整个对象）
         if (startDisabled)
             SetTargetEnabled(false);
     }
 
+    private void OnDestroy()
+    {
+        if (_punch == null) return;
+        _punch.FlipStarted -= OnFlipStarted;
+        _punch.FlipFinished -= OnFlipFinished;
+    }
+
     private void OnMouseDown()
     {
-        GameBootstrap.TyperPresenter.OnInkToggled(!_isOpen);
+        GameBootstrap.TyperPresenter.OnInkToggled();
     }
 
+    /// <summary>主动切换：播放按钮 Punch 并切换墨盒（鼠标点击 / 键盘 C 共用）。</summary>
+    public void Toggle()
+    {
+        Toggle(!IsOpen, true);
+    }
+
+    /// <summary>被动同步状态（其他按钮切换时由 Presenter 调用），不播放 Punch。</summary>
     public void Toggle(bool open)
     {
-        if (_isRotating) return; // 旋转中不响应
-        _isOpen = open;
-        StartCoroutine(TriggerRoutine(_isOpen));
+        Toggle(open, false);
     }
 
-    private IEnumerator TriggerRoutine(bool open)
+    public void Toggle(bool open, bool playPunch)
     {
-        _isRotating = true;
-
-        if (open)
-        {
-            // ① 第一次点击：先启用 Canvas，再转到 0°
-            SetTargetEnabled(true);
-            yield return null;          // 给 Canvas 一帧初始化时间
-            yield return RotateTo(true);
-        }
-        else
-        {
-            // ② 第二次点击：先转回 90°，再禁用 Canvas
-            yield return RotateTo(false);
-            SetTargetEnabled(false);
-        }
-
-        _isRotating = false;
+        if (playPunch) _punch.Punch();
+        _punch.SetOpen(open);
     }
 
-    private IEnumerator RotateTo(bool open)
+    private void OnFlipStarted(bool open)
     {
-        if (rotateTarget == null) yield break;
+        // 展开时先启用目标，等 ButtonPunch 给出一帧初始化时间后再旋转
+        if (open) SetTargetEnabled(true);
+    }
 
-        Transform t = rotateTarget.transform;
-        Quaternion from = t.localRotation; // 用当前朝向作为起点，更稳
-        Quaternion to = open ? _openRotation : _closedRotation;
-
-        float elapsed = 0f;
-        while (elapsed < rotateDuration)
-        {
-            elapsed += Time.deltaTime;
-            float k = Mathf.Clamp01(elapsed / rotateDuration);
-            if (useEase) k = k * k * (3f - 2f * k); // SmoothStep 缓动
-            t.localRotation = Quaternion.Slerp(from, to, k);
-            yield return null;
-        }
-        t.localRotation = to; // 精确到位
+    private void OnFlipFinished(bool open)
+    {
+        // 收起动画播完后再禁用目标
+        if (!open) SetTargetEnabled(false);
     }
 
     private void SetTargetEnabled(bool enabled)

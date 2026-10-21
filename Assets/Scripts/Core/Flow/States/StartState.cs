@@ -22,6 +22,7 @@ namespace Hyperplasia.Core.Flow.States
 
         public void OnText(string text)
         {
+            _c.TransitionTo(InputState.Explore);
         }
 
         public void OnCommand(InputCommand command)

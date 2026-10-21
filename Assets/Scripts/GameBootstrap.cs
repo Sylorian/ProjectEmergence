@@ -103,7 +103,7 @@ namespace Hyperplasia.Runtime
             _session = new GameSession(LoadDatabase());
             _controller = new InputController(_inputSource, _session);
 
-            _typerPresenter.Prepare(_session.TyperEngine, _controller, InputState.Explore);
+            _typerPresenter.Prepare(_session.TyperEngine, _controller, GameConfig.START_INPUT_STATE);
 
             if (_typerPresenter.Engine == null || _typerPresenter.DraftLine == null)
                 Debug.LogError("[GameBootstrap] Typer/World 引用不完整，请检查 Inspector 绑定。");
@@ -139,12 +139,8 @@ namespace Hyperplasia.Runtime
 
         private void HookTyperEvents()
         {
-            if (_session == null || _typerPresenter == null) return;
-            _session.TyperEngine.FeedbackRaised += _typerPresenter.OnFeedback;
-            _session.TyperEngine.FirstWordCommitted += _typerPresenter.OnFirstWord;
-            _session.TyperEngine.SecondWordCommitted += _typerPresenter.OnSecondWord;
-            _session.TyperEngine.CandidatesChanged += _typerPresenter.OnCandidatesChanged;
-            _session.TyperEngine.InspectionRaised += _typerPresenter.OnInspection;
+            if (_typerPresenter == null) return;
+            _typerPresenter.HookEvents();
         }
 
         private void UnhookTyperEvents()
@@ -155,6 +151,8 @@ namespace Hyperplasia.Runtime
             _session.TyperEngine.SecondWordCommitted -= _typerPresenter.OnSecondWord;
             _session.TyperEngine.CandidatesChanged -= _typerPresenter.OnCandidatesChanged;
             _session.TyperEngine.InspectionRaised -= _typerPresenter.OnInspection;
+
+            _typerPresenter.UnhookEvents();
         }
     }
 }

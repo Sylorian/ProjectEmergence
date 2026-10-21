@@ -77,19 +77,19 @@ namespace Hyperplasia.Core.Flow
             else if (axis < 0f) MoveAxis = -1f;
         }
 
-        public void RequestToggleInventory(bool open)
+        public void RequestToggleInventory()
         {
-            TyperEngine.ToggleInventory(open);
+            TyperEngine.ToggleInventory();
         }
 
-        public void RequestToggleInk(bool open)
+        public void RequestToggleInk()
         {
-            TyperEngine.ToggleInk(open);
+            TyperEngine.ToggleInk();
         }
 
-        public void RequestToggleHistory(bool open)
+        public void RequestToggleHistory()
         {
-            TyperEngine.ToggleHistory(open);
+            TyperEngine.ToggleHistory();
         }
 
         #endregion

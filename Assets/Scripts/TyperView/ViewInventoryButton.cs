@@ -2,13 +2,14 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Hyperplasia.Runtime;
+using Hyperplasia.View;
 
 /// <summary>
-/// 融合版：挂在按钮对象上（需要有 Collider2D 才能响应 OnMouseDown）。
-/// 点击后：按钮做旋转反馈 + 触发原 PackBagMover 的“显示/隐藏”位移抖动逻辑。
+/// 背包按钮：点击后切换背包显隐（位移 + 抖动），并交给 ButtonPunch 播放按钮旋转反馈。
 /// 位移目标从场景里按 Key 取：0008 = 背包主体，0007 = frame。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(ButtonPunch))]
 public class ViewInventoryButton : MonoBehaviour
 {
     [Header("场景对象 Key")]
@@ -27,25 +28,21 @@ public class ViewInventoryButton : MonoBehaviour
     [SerializeField] private float   shakeFrequency = 15f;
     [SerializeField] private Vector3 shakeAxis      = new Vector3(1f, 1f, 0f);
 
-    [Header("按钮旋转设置")]
-    [SerializeField] private float targetAngleX = -20f;
-    [SerializeField] private float duration     = 0.5f;
-    [SerializeField] private bool  useEase      = true;
-
     private Transform bagTransform;    // 0008
     private Transform frameTransform;  // 0007
-
-    private Quaternion startRotation;
-    private bool isRotating;
 
     private bool isShow = true;
     private bool isBusy;
     private Coroutine currentRoutine;
 
+    private ButtonPunch _punch;
+
     private void Awake()
     {
-        // 记录初始局部旋转，不破坏原本的 Z 轴朝向
-        startRotation = transform.localRotation;
+        // 按钮旋转反馈统一交给 ButtonPunch
+        _punch = GetComponent<ButtonPunch>();
+        if (_punch == null)
+            _punch = gameObject.AddComponent<ButtonPunch>();
     }
 
     private void Start()
@@ -63,42 +60,55 @@ public class ViewInventoryButton : MonoBehaviour
     // 点击触发
     private void OnMouseDown()
     {
-        GameBootstrap.TyperPresenter.OnInventoryToggled(!isShow);
+        GameBootstrap.TyperPresenter.OnInventoryToggled();
     }
 
-    /// <summary>统一入口：旋转反馈 + 切换背包显隐</summary>
-    public void Trigger()
+    /// <summary>主动切换：播放按钮 Punch 并切换背包显隐（鼠标点击 / 键盘 I 共用）。</summary>
+    public void Toggle()
     {
-        if (isBusy || isRotating) return;   // 移动中 / 旋转中忽略连点
-
-        if (isShow)
-        {
-            isShow = false;
-            Play();
-        }
-        else
-        {
-            isShow = true;
-            Back();
-        }
-
-        StartCoroutine(RotateRoutine());
+        Toggle(!isShow, true);
     }
 
+    /// <summary>被动同步状态（其他按钮切换时由 Presenter 调用），不播放 Punch。</summary>
     public void Toggle(bool open)
     {
-        if (isBusy || isRotating) return;
-        if (open == isShow) return;
-        if (open)
+        Toggle(open, false);
+    }
+
+    /// <summary>
+    /// 切换到指定显隐状态。
+    /// 若位移协程正在播放且请求的是相反状态，会停掉当前协程，
+    /// 然后从当前位置继续用动画平滑过渡到请求的状态。
+    /// </summary>
+    public void Toggle(bool open, bool playPunch)
+    {
+        if (playPunch) _punch.Punch();
+
+        if (isBusy)
         {
-            isShow = true;
-            Play();
+            if (open == isShow) return; // 已经在朝这个状态走
+            StopCurrentMotion();        // 停掉协程，从当前位置重新过渡
         }
-        else
+        else if (open == isShow)
         {
-            isShow = false;
-            Back();
+            return;
         }
+
+        isShow = open;
+        if (isShow) Play();
+        else Back();
+    }
+
+    /// <summary>停掉当前位移协程，保留当前位置，供后续平滑过渡。</summary>
+    private void StopCurrentMotion()
+    {
+        if (currentRoutine != null)
+        {
+            StopCoroutine(currentRoutine);
+            currentRoutine = null;
+        }
+
+        isBusy = false;
     }
 
     public void Play()
@@ -132,9 +142,6 @@ public class ViewInventoryButton : MonoBehaviour
     {
         try
         {
-            if (Vector3.Distance(bagTransform.position, targetPosition) < shakeMagnitude * 2f)
-                bagTransform.localPosition = targetPosition;
-
             while (Vector3.Distance(bagTransform.localPosition, checkPoint) > 0.01f)
             {
                 if (frameTransform != null)
@@ -161,9 +168,6 @@ public class ViewInventoryButton : MonoBehaviour
     {
         try
         {
-            if (Vector3.Distance(bagTransform.localPosition, targetPosition) < shakeMagnitude * 2f)
-                bagTransform.localPosition = targetPosition;
-
             while (Vector3.Distance(bagTransform.localPosition, targetPosition) > 0.01f)
             {
                 if (frameTransform != null)
@@ -205,35 +209,5 @@ public class ViewInventoryButton : MonoBehaviour
             isBusy = false;
             currentRoutine = null;
         }
-    }
-
-    // ---------------- 按钮旋转反馈 ----------------
-
-    private IEnumerator RotateRoutine()
-    {
-        isRotating = true;
-
-        float half = duration * 0.5f;
-        Quaternion targetRotation = startRotation * Quaternion.Euler(targetAngleX, 0f, 0f);
-
-        yield return RotateFromTo(startRotation, targetRotation, half);
-        yield return RotateFromTo(targetRotation, startRotation, half);
-
-        transform.localRotation = startRotation;
-        isRotating = false;
-    }
-
-    private IEnumerator RotateFromTo(Quaternion from, Quaternion to, float time)
-    {
-        float t = 0f;
-        while (t < time)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / time);
-            if (useEase) k = k * k * (3f - 2f * k);
-            transform.localRotation = Quaternion.Slerp(from, to, k);
-            yield return null;
-        }
-        transform.localRotation = to;   // 精确到位，避免下一段起点跳变
     }
 }

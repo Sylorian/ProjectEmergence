@@ -30,9 +30,9 @@ namespace Hyperplasia.Core.Flow
 
         public event Action OrangeOutline;
 
-        public event Action<bool> InventoryToggled;
-        public event Action<bool> InkToggled;
-        public event Action<bool> HistoryToggled;
+        public event Action InventoryToggled;
+        public event Action InkToggled;
+        public event Action HistoryToggled;
 
         public TyperEngine(GameDatabase db)
         {
@@ -136,19 +136,19 @@ namespace Hyperplasia.Core.Flow
             OrangeOutline?.Invoke();
         }
 
-        public void ToggleInventory(bool open)
+        public void ToggleInventory()
         {
-            InventoryToggled?.Invoke(open);
+            InventoryToggled?.Invoke();
         }
 
-        public void ToggleInk(bool open)
+        public void ToggleInk()
         {
-            InkToggled?.Invoke(open);
+            InkToggled?.Invoke();
         }
 
-        public void ToggleHistory(bool open)
+        public void ToggleHistory()
         {
-            HistoryToggled?.Invoke(open);
+            HistoryToggled?.Invoke();
         }
     }
 }

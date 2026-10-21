@@ -53,28 +53,28 @@ namespace Hyperplasia.Presenter
         }
 
         #region event_handlers 处理来自 TyperEngine 的反馈事件。
-        public void OnInventoryToggled(bool open)
+        public void OnInventoryToggled()
         {
             if (ViewInventoryButton != null)
-                ViewInventoryButton.Toggle(open);
+                ViewInventoryButton.Toggle();
             if (ViewInkButton != null)
                 ViewInkButton.Toggle(false);
             if (ViewHistoryButton != null)
                 ViewHistoryButton.Toggle(false);
         }
-        public void OnInkToggled(bool open)
+        public void OnInkToggled()
         {
             if (ViewInkButton != null)
-                ViewInkButton.Toggle(open);
+                ViewInkButton.Toggle();
             if (ViewInventoryButton != null)
                 ViewInventoryButton.Toggle(false);
             if (ViewHistoryButton != null)
                 ViewHistoryButton.Toggle(false);
         }
-        public void OnHistoryToggled(bool open)
+        public void OnHistoryToggled()
         {
             if (ViewHistoryButton != null)
-                ViewHistoryButton.Toggle(open);
+                ViewHistoryButton.Toggle();
             if (ViewInventoryButton != null)
                 ViewInventoryButton.Toggle(false);
             if (ViewInkButton != null)
@@ -109,6 +109,30 @@ namespace Hyperplasia.Presenter
             RefreshHistory();
         }
         #endregion
+
+        public void HookEvents()
+        {
+            Engine.FeedbackRaised += OnFeedback;
+            Engine.FirstWordCommitted += OnFirstWord;
+            Engine.SecondWordCommitted += OnSecondWord;
+            Engine.CandidatesChanged += OnCandidatesChanged;
+            Engine.InspectionRaised += OnInspection;
+            Engine.InventoryToggled += OnInventoryToggled;
+            Engine.HistoryToggled += OnHistoryToggled;
+            Engine.InkToggled += OnInkToggled;
+        }
+
+        public void UnhookEvents()
+        {
+            Engine.FeedbackRaised -= OnFeedback;
+            Engine.FirstWordCommitted -= OnFirstWord;
+            Engine.SecondWordCommitted -= OnSecondWord;
+            Engine.CandidatesChanged -= OnCandidatesChanged;
+            Engine.InspectionRaised -= OnInspection;
+            Engine.InventoryToggled -= OnInventoryToggled;
+            Engine.HistoryToggled -= OnHistoryToggled;
+            Engine.InkToggled -= OnInkToggled;
+        }
 
         private void PrepareHistory()
         {

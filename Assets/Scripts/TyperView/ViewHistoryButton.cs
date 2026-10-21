@@ -1,20 +1,11 @@
-using System.Collections;
 using UnityEngine;
 using Hyperplasia.Runtime;
+using Hyperplasia.View;
 
 [RequireComponent(typeof(Collider2D))] // OnMouseDown 需要碰撞体
+[RequireComponent(typeof(ButtonPunch))]
 public class ViewHistoryButton : MonoBehaviour
 {
-    [Header("旋转设置")]
-    [Tooltip("点击后沿 X 轴旋转到多少度")]
-    public float targetAngleX = -20f;
-
-    [Tooltip("一个来回的总时长（秒）")]
-    public float duration = 0.5f;
-
-    [Tooltip("是否使用平滑缓动，关闭则为匀速")]
-    public bool useEase = true;
-
     [Header("纸张盒子移动设置")]
     [Tooltip("要移动的物体在 GameObjectRegistry 里的 ID")]
     public int paperMoverId = 1002;
@@ -40,10 +31,6 @@ public class ViewHistoryButton : MonoBehaviour
     [Tooltip("输出区域改变速度")]
     public float outputRectChangeSpeed = 2000f;
 
-    // ---- 旋转状态 ----
-    private Quaternion _startRotation;
-    private bool _isRotating = false;
-
     // ---- 移动状态 ----
     private bool _paperPosition = false;
     private bool _initialized = false;
@@ -52,10 +39,14 @@ public class ViewHistoryButton : MonoBehaviour
     private Vector3 _targetPaperPosition;
     private float _targetOutputRectTopMargin;
 
+    private ButtonPunch _punch;
+
     private void Awake()
     {
-        // 记录初始局部旋转，这样不会破坏原本的 Z 轴朝向
-        _startRotation = transform.localRotation;
+        // 按钮旋转反馈统一交给 ButtonPunch
+        _punch = GetComponent<ButtonPunch>();
+        if (_punch == null)
+            _punch = gameObject.AddComponent<ButtonPunch>();
     }
 
     private void Start()
@@ -83,7 +74,7 @@ public class ViewHistoryButton : MonoBehaviour
 
     /// <summary>
     /// 解析注册表中的纸张 / 输出区域并初始化到收起状态。
-    /// GameObjectRegistry 与 PaperBoxMover 的 Start 执行顺序不确定，
+    /// GameObjectRegistry 与按钮脚本的 Start 执行顺序不确定，
     /// 所以允许在 Update 中重试，避免注册表尚未写入时引用永久为空。
     /// </summary>
     private void TryInitialize()
@@ -96,32 +87,43 @@ public class ViewHistoryButton : MonoBehaviour
         if (_initialized) return;
         if (_paperTransform == null && _outputRect == null) return;
 
-        // 初始处于收起状态
-        _targetPaperPosition = positionClosed;
-        _targetOutputRectTopMargin = TopMarginClosed;
-        if (_paperTransform != null)
-            _paperTransform.localPosition = _targetPaperPosition;
-        if (_outputRect != null)
-            _outputRect.offsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
+        // 还没点过按钮时，首次拿到目标就同步到初始（收起）状态
+        if (!_paperPosition)
+        {
+            _targetPaperPosition = positionClosed;
+            _targetOutputRectTopMargin = TopMarginClosed;
+            if (_paperTransform != null)
+                _paperTransform.localPosition = _targetPaperPosition;
+            if (_outputRect != null)
+                _outputRect.offsetMax = new Vector2(_outputRect.offsetMax.x, -_targetOutputRectTopMargin);
+        }
 
         _initialized = true;
     }
 
     private void OnMouseDown()
     {
-        GameBootstrap.TyperPresenter.OnHistoryToggled(!_paperPosition);
+        GameBootstrap.TyperPresenter.OnHistoryToggled();
     }
 
+    /// <summary>主动切换：播放按钮 Punch 并移动纸张（鼠标点击 / 键盘 H 共用）。</summary>
+    public void Toggle()
+    {
+        Toggle(!_paperPosition, true);
+    }
+
+    /// <summary>被动同步状态（其他按钮切换时由 Presenter 调用），不播放 Punch。</summary>
     public void Toggle(bool open)
     {
-        // 切换纸张盒子位置
-        TogglePaperPosition(open);
+        Toggle(open, false);
+    }
 
-        // 触发旋转动画（正在旋转时忽略连点）
-        if (!_isRotating)
-        {
-            StartCoroutine(RotateRoutine());
-        }
+    public void Toggle(bool open, bool playPunch)
+    {
+        if (playPunch) _punch.Punch();
+
+        if (open == _paperPosition) return;
+        TogglePaperPosition(open);
     }
 
     /// <summary>切换纸张盒子的目标位置</summary>
@@ -130,36 +132,5 @@ public class ViewHistoryButton : MonoBehaviour
         _paperPosition = open;
         _targetPaperPosition = _paperPosition ? positionOpen : positionClosed;
         _targetOutputRectTopMargin = _paperPosition ? TopMarginOpen : TopMarginClosed;
-    }
-
-    private IEnumerator RotateRoutine()
-    {
-        _isRotating = true;
-
-        float half = duration * 0.5f;                                   // 单程时间
-        Quaternion targetRotation =
-            _startRotation * Quaternion.Euler(targetAngleX, 0f, 0f);     // 绕本地 X 轴
-
-        // ① 0 → targetAngleX
-        yield return RotateFromTo(_startRotation, targetRotation, half);
-
-        // ② targetAngleX → 0
-        yield return RotateFromTo(targetRotation, _startRotation, half);
-
-        transform.localRotation = _startRotation; // 精确回到初始状态
-        _isRotating = false;
-    }
-
-    private IEnumerator RotateFromTo(Quaternion from, Quaternion to, float time)
-    {
-        float t = 0f;
-        while (t < time)
-        {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / time);
-            if (useEase) k = k * k * (3f - 2f * k); // SmoothStep 缓动
-            transform.localRotation = Quaternion.Slerp(from, to, k);
-            yield return null;
-        }
     }
 }
