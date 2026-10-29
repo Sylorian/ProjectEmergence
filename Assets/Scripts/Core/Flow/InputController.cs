@@ -7,7 +7,7 @@ namespace Hyperplasia.Core.Flow
 {
     /// <summary>
     /// 输入状态机调度：把采集层事件分发给当前状态，并持有词库 / 世界状态 / 规则引擎。
-    /// 初始为状态 0（Explore），按 Enter 进入状态 1（FirstWord）。
+    /// 初始为 StartState；输入 START 并按 Enter 后进入 Explore。
     /// </summary>
     public sealed class InputController
     {
@@ -20,6 +20,9 @@ namespace Hyperplasia.Core.Flow
         private IInputState _current;
 
         public event Action<InputState, InputState> StateChanged;
+
+        /// <summary>请求退出游戏（由具体运行时层处理，Core 不直接依赖 UnityEditor）。</summary>
+        public event Action ExitRequested;
 
         public InputState State { get { return _current.StateId; } }
 
@@ -35,13 +38,14 @@ namespace Hyperplasia.Core.Flow
             TyperEngine = Session.TyperEngine;
 
             _states = new IInputState[Enum.GetValues(typeof(InputState)).Length];
+            _states[(int)InputState.Start] = new StartState(this);
             _states[(int)InputState.Explore] = new ExploreState(this);
             _states[(int)InputState.FirstWord] = new FirstWordState(this);
             _states[(int)InputState.SecondWord] = new SecondWordState(this);
             _states[(int)InputState.InspectItem] = new InspectItemState(this);
             _states[(int)InputState.Resolve] = new ResolveState(this);
 
-            _current = _states[(int)InputState.Explore];
+            _current = _states[(int)GameConfig.START_INPUT_STATE];
             _current.Enter();
         }
 
@@ -71,6 +75,11 @@ namespace Hyperplasia.Core.Flow
         }
 
         #region Requests
+        public void RequestExit()
+        {
+            ExitRequested?.Invoke();
+        }
+
         public void RequestCharacterMove(float axis)
         {
             if (axis > 0f) MoveAxis = 1f;

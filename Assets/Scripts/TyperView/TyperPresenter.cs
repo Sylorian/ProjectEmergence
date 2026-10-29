@@ -38,7 +38,12 @@ namespace Hyperplasia.Presenter
 
         public void UpdateInputVisibility(InputState inputState)
         {
-            UIBase.SetActive(InputRoot, inputState != InputState.Explore);
+            // 需要显示输入框的状态（Start 也要显示 START 提示）
+            bool showInput = inputState == InputState.Start
+                          || inputState == InputState.FirstWord
+                          || inputState == InputState.SecondWord
+                          || inputState == InputState.InspectItem;
+            UIBase.SetActive(InputRoot, showInput);
         }
 
         public void Prepare(TyperEngine engine, InputController controller, InputState inputState)

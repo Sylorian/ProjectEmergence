@@ -83,7 +83,10 @@ namespace Hyperplasia.Runtime
         private void OnDestroy()
         {
             if (!_isSingletonOwner) return;
-            
+
+            if (_controller != null)
+                _controller.ExitRequested -= RequestQuit;
+
             if (Instance == this)
             {
                 Instance = null;
@@ -102,6 +105,7 @@ namespace Hyperplasia.Runtime
 
             _session = new GameSession(LoadDatabase());
             _controller = new InputController(_inputSource, _session);
+            _controller.ExitRequested += RequestQuit;
 
             _typerPresenter.Prepare(_session.TyperEngine, _controller, GameConfig.START_INPUT_STATE);
 
@@ -135,6 +139,15 @@ namespace Hyperplasia.Runtime
 
             Debug.LogWarning("[GameBootstrap] 未配置 GameData，使用空数据库。");
             return new GameDatabase();
+        }
+
+        private static void RequestQuit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         private void HookTyperEvents()

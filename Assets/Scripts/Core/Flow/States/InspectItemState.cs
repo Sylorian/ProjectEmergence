@@ -9,6 +9,8 @@ namespace Hyperplasia.Core.Flow.States
     /// </summary>
     public sealed class InspectItemState : IInputState
     {
+        private const string PickableTag = "可拾取";
+
         private readonly InputController _c;
 
         public InspectItemState(InputController c)
@@ -23,7 +25,16 @@ namespace Hyperplasia.Core.Flow.States
             _c.Router.TypingEnabled = false;
             _c.TyperEngine.Buffer.Clear();
             _c.TyperEngine.ClearCandidates();
-            _c.TyperEngine.RaiseInspection(BuildInspectionText());
+
+            // 先解析并显示查看内容，再执行拾取（拾取会从数据库移除实体）
+            Entity entity = ResolveInspectedEntity();
+            _c.TyperEngine.RaiseInspection(BuildInspectionText(entity));
+
+            if (entity != null && entity.HasTag(PickableTag) &&
+                _c.Session.CollectToInventory(entity.Id))
+            {
+                _c.TyperEngine.RaiseFeedback("已拾取：" + entity.Name);
+            }
         }
 
         public void OnText(string text)
@@ -47,10 +58,20 @@ namespace Hyperplasia.Core.Flow.States
         {
         }
 
-        private string BuildInspectionText()
+        /// <summary>取当前查看目标对应的实体（FirstWord 为名词候选）。</summary>
+        private Entity ResolveInspectedEntity()
         {
-            WordCandidate w = _c.TyperEngine.FirstWord;
-            if (!_c.Session.Database.EntityById.TryGetValue(w.Id, out Entity e)) return null;
+            WordCandidate word = _c.TyperEngine.FirstWord;
+            if (word == null) return null;
+
+            return _c.Session.Database.EntityById.TryGetValue(word.Id, out Entity entity)
+                ? entity
+                : null;
+        }
+
+        private string BuildInspectionText(Entity e)
+        {
+            if (e == null) return null;
 
             var sb = new StringBuilder();
             sb.Append(e.Name);

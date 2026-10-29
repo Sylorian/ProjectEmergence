@@ -43,6 +43,17 @@ public class ScenesManager : MonoBehaviour
         "BedroomObject","StoreroomObject","LivingroomObject","HallwayObject","KitchenObject","WashroomObject"
     };
 
+    /// <summary>界面根节点名称 → 数据层房间名（与 GameData 中的 room 字段一致）。</summary>
+    private static readonly Dictionary<string, string> RoomNameByScreen = new()
+    {
+        { "HouseBedroom", "卧室" },
+        { "HouseStoreroom", "储藏室" },
+        { "HouseLivingroom", "客厅" },
+        { "HouseHallway", "玄关" },
+        { "HouseKitchen", "厨房" },
+        { "HouseWashroom", "卫生间" }
+    };
+
     private int currentIndex;
     private float targetX;
     private float velocityX;
@@ -74,6 +85,7 @@ public class ScenesManager : MonoBehaviour
         screenActiveStates = new bool[screens.Length];
 
         currentIndex = Mathf.Clamp(startIndex, 0, screens.Length - 1);
+        SyncCurrentRoom();
         targetX = screens[currentIndex].position.x;
 
         var p = transform.position;
@@ -217,6 +229,7 @@ public class ScenesManager : MonoBehaviour
 
         index = Mathf.Clamp(index, 0, screens.Length - 1);
         currentIndex = index;
+        SyncCurrentRoom();
 
         var character = ScenePropertyRegistry.GetInstance<Transform>("01");
         if (character != null && index < sortinglayer.Length)
@@ -229,6 +242,27 @@ public class ScenesManager : MonoBehaviour
 
         if (autoActivate) UpdateActivation(false);
     }
+
+    /// <summary>把当前界面同步到数据层的 GameSession.CurrentRoom。</summary>
+    private void SyncCurrentRoom()
+    {
+        if (screens == null || screens.Length == 0) return;
+        if (currentIndex < 0 || currentIndex >= screens.Length) return;
+
+        Transform screen = screens[currentIndex];
+        if (screen == null) return;
+
+        if (!RoomNameByScreen.TryGetValue(screen.name, out string roomName))
+        {
+            Debug.LogWarning($"[ScenesManager] 界面 {screen.name} 未配置对应的房间名", screen);
+            return;
+        }
+
+        var session = GameBootstrap.Session;
+        if (session != null)
+            session.CurrentRoom = roomName;
+    }
+
 
     void UpdateActivation(bool force)
     {

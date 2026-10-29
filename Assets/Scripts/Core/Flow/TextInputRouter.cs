@@ -50,10 +50,15 @@ namespace Hyperplasia.Core.Flow
 
             foreach (InputCommand cmd in Enum.GetValues(typeof(InputCommand)))
             {
-                // 移动指令不用冷却
-                cooldown = cmd != InputCommand.MoveLeft && cmd != InputCommand.MoveRight && cooldown;
-                bool commandAllowed = !deliveredText && !cooldown;
-                if (commandAllowed && _source.ConsumeKey(cmd))
+                // 移动指令不受冷却限制；Enter（Submit）是明确的提交动作，
+                // 也不应被刚输入完文本的冷却吞掉。
+                bool ignoreCooldown = cmd == InputCommand.MoveLeft
+                                   || cmd == InputCommand.MoveRight
+                                   || cmd == InputCommand.Submit;
+                bool allowByCooldown = ignoreCooldown || !cooldown;
+                bool allowByText = !deliveredText || cmd == InputCommand.Submit;
+
+                if (allowByCooldown && allowByText && _source.ConsumeKey(cmd))
                 {
                     _lastInputTime = now;
                     CommandPressed?.Invoke(cmd);

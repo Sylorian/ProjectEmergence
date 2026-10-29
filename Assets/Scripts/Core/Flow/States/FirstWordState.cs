@@ -32,6 +32,14 @@ namespace Hyperplasia.Core.Flow.States
         public void OnText(string text)
         {
             _c.TyperEngine.Buffer.Append(text);
+
+            // 在 FirstWord 输入 EXIT 直接退出游戏
+            if (IsExitWord(_c.TyperEngine.Buffer.Text))
+            {
+                _c.RequestExit();
+                return;
+            }
+
             Refresh();
         }
 
@@ -43,6 +51,11 @@ namespace Hyperplasia.Core.Flow.States
                     Select(_c.TyperEngine.GetCandidates().Count > 0 ? _selected : 0);
                     break;
                 case InputCommand.Submit:
+                    if (IsExitWord(_c.TyperEngine.Buffer.Text))
+                    {
+                        _c.RequestExit();
+                        break;
+                    }
                     if (_c.TyperEngine.GetCandidates().Count > 0) Select(_selected);
                     else if (_c.TyperEngine.Buffer.IsEmpty) _c.TransitionTo(InputState.Explore);
                     else _c.TyperEngine.RaiseFeedback("这行不通");
@@ -71,6 +84,11 @@ namespace Hyperplasia.Core.Flow.States
             if (index < 0) return false;   // 点击的是过期 chip：什么都不做
             Select(index);
             return true;
+        }
+
+        private static bool IsExitWord(string text)
+        {
+            return string.Equals(text?.Trim(), "exit", StringComparison.OrdinalIgnoreCase);
         }
 
         private void Refresh()
