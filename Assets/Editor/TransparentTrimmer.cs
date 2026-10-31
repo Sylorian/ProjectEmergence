@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 public class TransparentTrimmer : EditorWindow
 {
-    int padding = 2;
-    float alphaThreshold = 0.02f;
+    int padding = 0;
+    float alphaThreshold = 0f;
     Object inputFolder;
     Object outputFolder;
 
