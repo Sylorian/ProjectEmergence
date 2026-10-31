@@ -220,7 +220,6 @@ Transform:
   - {fileID: 174840623}
   - {fileID: 143743119}
   - {fileID: 1395272281}
-  - {fileID: 788729125}
   - {fileID: 2018771687}
   - {fileID: 1033395651}
   - {fileID: 1876058354}
@@ -240,7 +239,7 @@ GameObject:
   - component: {fileID: 8626122}
   - component: {fileID: 8626123}
   m_Layer: 0
-  m_Name: _0002_Window
+  m_Name: Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -255,7 +254,7 @@ Transform:
   m_GameObject: {fileID: 8626120}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.98, y: 2.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -302,7 +301,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c1027f8455bc485479d4326053f5fbe9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 27a8c4c86702e8b45b53c40c75d6b5d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -737,7 +736,7 @@ GameObject:
   - component: {fileID: 27172737}
   - component: {fileID: 27172738}
   m_Layer: 0
-  m_Name: _0001_Teapot
+  m_Name: Teapot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,7 +751,7 @@ Transform:
   m_GameObject: {fileID: 27172735}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: -8.398, y: -1.483, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -799,7 +798,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 83ebcdd70f23b5347aee48537a040c9f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cc91a40b66050e7409a118bab8e96322, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -862,7 +861,7 @@ GameObject:
   - component: {fileID: 27743285}
   - component: {fileID: 27743286}
   m_Layer: 0
-  m_Name: _0004_Chair2
+  m_Name: Chair2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -877,7 +876,7 @@ Transform:
   m_GameObject: {fileID: 27743283}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalPosition: {x: -11.406, y: -3.47, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -924,7 +923,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cbdf461b38cf5fc40a9aef1ce579c4c9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9211972f5ee709944b1d4817c6432420, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1794,7 +1793,7 @@ Transform:
   m_GameObject: {fileID: 77195450}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.411, y: -1.399, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1841,7 +1840,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 19fc8c622812c354d938ad05c80e6b11, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5c4b0655b2545d24b9ee2348e98905c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2029,7 +2028,7 @@ GameObject:
   m_Component:
   - component: {fileID: 94948291}
   m_Layer: 0
-  m_Name: KitchenLightSys
+  m_Name: KitchenLights
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2664,7 +2663,7 @@ GameObject:
   - component: {fileID: 143743120}
   - component: {fileID: 143743121}
   m_Layer: 0
-  m_Name: _0021_Heatingpipe
+  m_Name: Heatingpipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2679,7 +2678,7 @@ Transform:
   m_GameObject: {fileID: 143743118}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.42, y: 7.64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2726,7 +2725,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1d301536c623c8442b4771bf528d646b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a3d71febc7a96cf4b928d8b9a12dc28c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3102,7 +3101,7 @@ GameObject:
   - component: {fileID: 174840624}
   - component: {fileID: 174840625}
   m_Layer: 0
-  m_Name: _0020_Cupboard
+  m_Name: Cupboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3117,7 +3116,7 @@ Transform:
   m_GameObject: {fileID: 174840622}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.844, y: -2.81, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3164,7 +3163,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a20b0a6f81823de41ba3e309938bc57e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5dc5c0b2cae3e48449eb140a1e75642c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3227,7 +3226,7 @@ GameObject:
   - component: {fileID: 191996213}
   - component: {fileID: 191996214}
   m_Layer: 0
-  m_Name: _0003_Chair1
+  m_Name: Chair1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3242,7 +3241,7 @@ Transform:
   m_GameObject: {fileID: 191996211}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: -6.637, y: -3.126, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3289,7 +3288,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 264b858081414214f863482b7fe43672, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7e6c5f0bbe57cbf46a9b27a9d2bd9366, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7212,7 +7211,7 @@ Transform:
   m_GameObject: {fileID: 608034082}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalPosition: {x: -10.85, y: -3.71, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7259,7 +7258,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 23196fb516091724e9470ee8c51fef6b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e340ba08480d2e45b5e526149e3e942, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9390,7 +9389,7 @@ Transform:
   m_GameObject: {fileID: 752140573}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: -12.608, y: -0.467, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9437,7 +9436,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a040fa9a0b85fd3418a07ad379ddefce, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dca0f438963ef1142a7efee5ce777e3f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9969,11 +9968,11 @@ Transform:
   m_GameObject: {fileID: 788729124}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4}
+  m_LocalPosition: {x: -0.611, y: -2.494, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2661163}
+  m_Father: {fileID: 1395272281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &788729126
 SpriteRenderer:
@@ -10016,7 +10015,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e96a4e5a1a34968439a6faab242e28a0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 44070483e38c27e498cf80dd3117d326, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -10908,7 +10907,7 @@ GameObject:
   - component: {fileID: 902025944}
   - component: {fileID: 902025945}
   m_Layer: 0
-  m_Name: _0028_Wall
+  m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10923,7 +10922,7 @@ Transform:
   m_GameObject: {fileID: 902025942}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalPosition: {x: 0, y: 2.11, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10970,7 +10969,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4ef3800bae4de80458b96e580c2254d9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 52697264f0893fd4e8cdbb4256f7d740, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11413,7 +11412,7 @@ GameObject:
   - component: {fileID: 983778741}
   - component: {fileID: 983778742}
   m_Layer: 0
-  m_Name: _0000_Vent
+  m_Name: Vent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11428,7 +11427,7 @@ Transform:
   m_GameObject: {fileID: 983778739}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -13.176, y: 6.171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11475,7 +11474,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b6df373d7d246c34abaa4457f292b736, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e04d2468df0bbfc42b1e5fda88737f01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11788,7 +11787,7 @@ GameObject:
   - component: {fileID: 1017635310}
   - component: {fileID: 1017635311}
   m_Layer: 0
-  m_Name: _0018_cooker
+  m_Name: Cooker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11803,7 +11802,7 @@ Transform:
   m_GameObject: {fileID: 1017635308}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalPosition: {x: 3.55, y: 0.31, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11858,7 +11857,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3e2f1bbdbedb48642b8d0c606d974c43, type: 3}
+  m_Sprite: {fileID: 21300000, guid: effda697e0d7e144bb12eb86fcd36511, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -12014,7 +12013,7 @@ Transform:
   m_GameObject: {fileID: 1026989418}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.282, y: -2.017, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12061,7 +12060,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a52b273227ca8d74ba3a2279aab442a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 07ca1a72c6d659245b61b5d60f033757, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -12249,7 +12248,7 @@ GameObject:
   - component: {fileID: 1033395652}
   - component: {fileID: 1033395653}
   m_Layer: 0
-  m_Name: _0026_Pipe
+  m_Name: Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12264,7 +12263,7 @@ Transform:
   m_GameObject: {fileID: 1033395650}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.547, y: 2.613, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12311,7 +12310,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3e43476fa8e344148a943a3e38a7f222, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 997e5201f65a2e84ea702e51fc94b4b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -12374,7 +12373,7 @@ GameObject:
   - component: {fileID: 1055951840}
   - component: {fileID: 1055951841}
   m_Layer: 0
-  m_Name: _0017_Saucepan
+  m_Name: Saucepan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12389,7 +12388,7 @@ Transform:
   m_GameObject: {fileID: 1055951838}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.224, y: -1.089, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12436,7 +12435,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8ee82bcc2d58e88499da25d7c8d8689a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0a214f39dbe9f974e9a3f6337cbdbca4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15064,7 +15063,7 @@ GameObject:
   - component: {fileID: 1270437037}
   - component: {fileID: 1270437038}
   m_Layer: 0
-  m_Name: _0005_Kettle
+  m_Name: Kettle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15079,7 +15078,7 @@ Transform:
   m_GameObject: {fileID: 1270437035}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -5}
+  m_LocalPosition: {x: -11.379, y: -1.036, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15126,7 +15125,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b6a492ef3f84ec042bc017ec26e88ded, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 113c9681d06990a40a4f2157f9488cf1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15896,7 +15895,7 @@ GameObject:
   - component: {fileID: 1351234381}
   - component: {fileID: 1351234382}
   m_Layer: 0
-  m_Name: _0022_Teakettle
+  m_Name: Teakettle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15911,7 +15910,7 @@ Transform:
   m_GameObject: {fileID: 1351234379}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 4.849, y: -0.642, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15958,7 +15957,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8b6ca91575cb5a24dadcbfe7ba69facd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6db1961c316a3e14c9119f742a28e41a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -16314,7 +16313,7 @@ GameObject:
   - component: {fileID: 1395272282}
   - component: {fileID: 1395272283}
   m_Layer: 0
-  m_Name: _0024_Gasrange
+  m_Name: Gasrange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16329,10 +16328,11 @@ Transform:
   m_GameObject: {fileID: 1395272280}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 7.754, y: 1.322, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 788729125}
   m_Father: {fileID: 2661163}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1395272282
@@ -16376,7 +16376,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 48076f10e8493c545a43caa900f2aa76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1919425b16364ee42a130c6cc755f2be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -17423,7 +17423,7 @@ GameObject:
   - component: {fileID: 1526555855}
   - component: {fileID: 1526555856}
   m_Layer: 0
-  m_Name: _0013_Garbagecan
+  m_Name: Garbagecan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17438,7 +17438,7 @@ Transform:
   m_GameObject: {fileID: 1526555853}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -7.549, y: -4.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17485,7 +17485,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8ee88b983092b5c4eb33386f4cd7e4af, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87bd75bb0d9db6b4ca17a9f95ed13de7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -18583,7 +18583,7 @@ GameObject:
   - component: {fileID: 1581312094}
   - component: {fileID: 1581312095}
   m_Layer: 0
-  m_Name: _0010_Cupboardup
+  m_Name: Cupboardup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18598,7 +18598,7 @@ Transform:
   m_GameObject: {fileID: 1581312092}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.34, y: 3.75, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18645,7 +18645,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e745ff7d1eb1f93429a3b2340d9b9c7e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33d2d8967aaaba44b8051fb615e1017c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -19132,7 +19132,7 @@ GameObject:
   - component: {fileID: 1617538407}
   - component: {fileID: 1617538408}
   m_Layer: 0
-  m_Name: _0014_Glassjar
+  m_Name: Glassjar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19147,7 +19147,7 @@ Transform:
   m_GameObject: {fileID: 1617538405}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.293, y: -1.132, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19194,7 +19194,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 18819457d856ff045bd661765376fdd4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e6c8f53c9d6c2ad42b471c1b259410c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -19782,7 +19782,7 @@ GameObject:
   - component: {fileID: 1665304674}
   - component: {fileID: 1665304675}
   m_Layer: 0
-  m_Name: _0015_OilBottle
+  m_Name: OilBottle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19797,7 +19797,7 @@ Transform:
   m_GameObject: {fileID: 1665304672}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.998, y: -0.673, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19844,7 +19844,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ca699be268aafaa4d9b00a21a5f52b4f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2ef90939bdfaa104db16ef7073180220, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -21057,7 +21057,7 @@ GameObject:
   - component: {fileID: 1779860871}
   - component: {fileID: 1779860872}
   m_Layer: 0
-  m_Name: _0016_Choppingboard
+  m_Name: Choppingboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21072,7 +21072,7 @@ Transform:
   m_GameObject: {fileID: 1779860869}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.769, y: -1.488, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21119,7 +21119,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3e95ad6777c84484c83509b8eef990c4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17c206f8e325f9c4d86924408443dd9f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -22905,7 +22905,7 @@ GameObject:
   - component: {fileID: 1873425495}
   - component: {fileID: 1873425496}
   m_Layer: 0
-  m_Name: _0009_Sideboard
+  m_Name: Sideboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22920,7 +22920,7 @@ Transform:
   m_GameObject: {fileID: 1873425493}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 14.283, y: -0.093, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22967,7 +22967,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3324a6cab361def4d89dc0037e741aba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 151897691d9ed5844926982184e1bb9a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23030,7 +23030,7 @@ GameObject:
   - component: {fileID: 1876058355}
   - component: {fileID: 1876058356}
   m_Layer: 0
-  m_Name: _0027_Floor
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23045,7 +23045,7 @@ Transform:
   m_GameObject: {fileID: 1876058353}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 5}
+  m_LocalPosition: {x: 0.173, y: -5.765, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23092,7 +23092,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 27bcc6a80be1ff54fac8e66b45c262ca, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f36fbcaa578280f43b8efe9f0a1ee2d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -24436,7 +24436,7 @@ Transform:
   m_GameObject: {fileID: 1945072065}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3}
+  m_LocalPosition: {x: -0.17, y: -1.61, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24483,7 +24483,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b71523845351cdf4eb3f33a1ea9dd822, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3ec04afbfb579b04d946359fa686fc64, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -24732,7 +24732,7 @@ Transform:
   m_GameObject: {fileID: 1972362963}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6}
+  m_LocalPosition: {x: -11.38, y: -1.58, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24779,7 +24779,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b93299649fdc8ab41aafea2967e88237, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b1ff996d5a99351468068623c1dde746, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25321,7 +25321,7 @@ Transform:
   m_GameObject: {fileID: 2018771686}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 10.89, y: 0.43, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25368,7 +25368,7 @@ SpriteRenderer:
   m_SortingLayerID: 1194286415
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8fc55ba162e8bfe4b8e4c9b4848eb11a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e8021edcb869d8b4a9d034bfcfef131b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
