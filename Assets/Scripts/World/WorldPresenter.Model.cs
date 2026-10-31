@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 using Hyperplasia.Core.Data;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Hyperplasia.World;
 
 namespace Hyperplasia.Presenter
 {
-    [Serializable]
-    public class WorldPresenter
-    {
-        public PlayerMover CharacterMover;
-
+    public partial class WorldPresenter
+    {        
         public readonly Dictionary<int, GameObject> GameObjects = new Dictionary<int, GameObject>();
 
         public void Register(int id, GameObject gameObject)
@@ -37,4 +35,5 @@ namespace Hyperplasia.Presenter
             return null;
         }
     }
+
 }

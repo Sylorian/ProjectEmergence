@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 namespace Hyperplasia.Core.Data
 {
+    public enum RoomEnum
+    {
+        Bedroom,
+        Storeroom,
+        Livingroom,
+        Hallway,
+        Kitchen,
+        Washroom,
+        None
+    }
     /// <summary>实体（物品 / 场景对象）。Pinyin 为名字拼音，供拼音候选匹配（可缺省）。</summary>
     public class Entity
     {
@@ -24,8 +34,8 @@ namespace Hyperplasia.Core.Data
         /// <summary>
         /// 物品所在房间的中文名称
         /// </summary>
-        private string _room;
-        public string Room => _room;
+        private RoomEnum _room;
+        public RoomEnum Room => _room;
         /// <summary>
         /// 物品初始持有的标签
         /// </summary>
@@ -49,7 +59,7 @@ namespace Hyperplasia.Core.Data
             _id = id;
             _name = name;
             _pinyin = pinyin;
-            _room = room;
+            _room = ResolveRoom(room);
             _tags = tags ?? new List<string>();
             _clues = clues ?? Array.Empty<string>();
         }
@@ -106,6 +116,20 @@ namespace Hyperplasia.Core.Data
                 removed |= RemoveTag(tag);
             }
             return removed;
+        }
+
+        private static RoomEnum ResolveRoom(string room)
+        {
+            return room switch
+            {
+                "Bedroom" or "卧室" => RoomEnum.Bedroom,
+                "StoreRoom" or "储藏室" => RoomEnum.Storeroom,
+                "LivingRoom" or "客厅" => RoomEnum.Livingroom,
+                "Hallway" or "玄关" => RoomEnum.Hallway,
+                "Kitchen" or "厨房" => RoomEnum.Kitchen,
+                "WashRoom" or "洗手间" => RoomEnum.Washroom,
+                _ => RoomEnum.None
+            };
         }
     }
 

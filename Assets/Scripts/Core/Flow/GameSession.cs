@@ -15,8 +15,8 @@ namespace Hyperplasia.Core.Flow
 
         private readonly Dictionary<int, Entity> _inventory = new Dictionary<int, Entity>();
 
-        private string _currentRoom;
-        public string CurrentRoom { get { return _currentRoom; } set { _currentRoom = value; } }
+        private RoomEnum _currentRoom;
+        public RoomEnum CurrentRoom { get { return _currentRoom; } set { _currentRoom = value; } }
         
         private int _ink;
         /// <summary>

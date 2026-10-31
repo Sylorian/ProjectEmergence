@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Hyperplasia.Core.Data;
 using Hyperplasia.Runtime;
 using UnityEngine;
 
@@ -44,14 +45,14 @@ public class ScenesManager : MonoBehaviour
     };
 
     /// <summary>界面根节点名称 → 数据层房间名（与 GameData 中的 room 字段一致）。</summary>
-    private static readonly Dictionary<string, string> RoomNameByScreen = new()
+    private static readonly Dictionary<string, RoomEnum> RoomNameByScreen = new()
     {
-        { "HouseBedroom", "卧室" },
-        { "HouseStoreroom", "储藏室" },
-        { "HouseLivingroom", "客厅" },
-        { "HouseHallway", "玄关" },
-        { "HouseKitchen", "厨房" },
-        { "HouseWashroom", "卫生间" }
+        { "HouseBedroom", RoomEnum.Bedroom },
+        { "HouseStoreroom", RoomEnum.Storeroom },
+        { "HouseLivingroom", RoomEnum.Livingroom },
+        { "HouseHallway", RoomEnum.Hallway },
+        { "HouseKitchen", RoomEnum.Kitchen },
+        { "HouseWashroom", RoomEnum.Washroom }
     };
 
     private int currentIndex;
@@ -252,7 +253,7 @@ public class ScenesManager : MonoBehaviour
         Transform screen = screens[currentIndex];
         if (screen == null) return;
 
-        if (!RoomNameByScreen.TryGetValue(screen.name, out string roomName))
+        if (!RoomNameByScreen.TryGetValue(screen.name, out RoomEnum room))
         {
             Debug.LogWarning($"[ScenesManager] 界面 {screen.name} 未配置对应的房间名", screen);
             return;
@@ -260,7 +261,7 @@ public class ScenesManager : MonoBehaviour
 
         var session = GameBootstrap.Session;
         if (session != null)
-            session.CurrentRoom = roomName;
+            session.CurrentRoom = room;
     }
 
 
