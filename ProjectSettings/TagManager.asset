@@ -57,9 +57,9 @@ TagManager:
   - name: Washroom
     uniqueID: 3571027037
     locked: 0
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Player
     uniqueID: 465229517
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0
