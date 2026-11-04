@@ -1,4 +1,5 @@
 using System.Text;
+using Hyperplasia.Core.Data;
 using Hyperplasia.Core.Flow;
 using TMPro;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Hyperplasia.View
             _sb.Clear();
             if (inspecting)
             {
-                _sb.Append("检视中（Esc返回，Backspace回退）");
+                _sb.Append(GameTexts.INSPECT_HINT);
             }
             else if (editing)
             {
@@ -63,17 +64,13 @@ namespace Hyperplasia.View
 
         private static string GetInputHint(InputState state)
         {
-            switch (state)
+            return state switch
             {
-                case InputState.Start:
-                    return "输入START以开始";
-                case InputState.FirstWord:
-                    return "输入第一个词（Enter提交，输入EXIT退出）";
-                case InputState.SecondWord:
-                    return "输入第二个词（Enter提交）";
-                default:
-                    return string.Empty;
-            }
+                InputState.Start => GameTexts.START_HINT,
+                InputState.FirstWord => GameTexts.FIRST_WORD_HINT,
+                InputState.SecondWord => GameTexts.SECOND_WORD_HINT,
+                _ => string.Empty,
+            };
         }
 
     }

@@ -23,8 +23,8 @@ namespace Hyperplasia.Core.Flow.States
 
             ResolveResult result = 
                 _c.TyperEngine.Resolver.Resolve(
-                    _c.TyperEngine.FirstWord.Id,
-                    _c.TyperEngine.SecondWord.Id,
+                    _c.TyperEngine.FirstWord?.Id ?? CoreConstants.INVALID_VERB_ID,
+                    _c.TyperEngine.SecondWord?.Id ?? CoreConstants.INVALID_ENTITY_ID,
                     _c.Session);
             if (result.Outcome == ResolveOutcome.Succeed)
                 _c.Session.Ink -= GameConfig.INK_COST_PER_SENTENCE;

@@ -18,7 +18,7 @@ namespace Hyperplasia.View
         {
             if (inkAmountText == null) return;
 
-            var inkAmountString = GameConstants.INK_AMOUNT_PREFIX + newInkAmount + "/" + GameConfig.START_INK;
+            var inkAmountString = GameTexts.INK_AMOUNT_PREFIX + newInkAmount + "/" + GameConfig.START_INK;
             UIBase.SetText(inkAmountText, inkAmountString);
         }
 

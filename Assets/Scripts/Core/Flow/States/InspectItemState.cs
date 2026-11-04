@@ -33,7 +33,7 @@ namespace Hyperplasia.Core.Flow.States
             if (entity != null && entity.HasTag(PickableTag) &&
                 _c.Session.CollectToInventory(entity.Id))
             {
-                _c.TyperEngine.RaiseFeedback("已拾取：" + entity.Name);
+                _c.TyperEngine.RaiseFeedback(GameTexts.PICKED_UP_PREFIX + entity.Name);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Hyperplasia.Core.Flow.States
             sb.Append('：');
             if (e.Tags == null || e.Tags.Count == 0)
             {
-                sb.Append("（无标签）");
+                sb.Append(GameTexts.NO_TAGS_TEXT);
             }
             else
             {

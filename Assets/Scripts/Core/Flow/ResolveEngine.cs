@@ -49,21 +49,21 @@ namespace Hyperplasia.Core.Flow
             if (!_db.VerbById.TryGetValue(verbId, out var v) || v == null)
             {
                 result.Outcome = ResolveOutcome.NoMatch;
-                result.Feedback = GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = GameTexts.DEFAULT_FALLBACK;
                 return result;
             }
 
             if (!_db.EntityById.TryGetValue(entityId, out var e) || e == null)
             {
                 result.Outcome = ResolveOutcome.NoMatch;
-                result.Feedback = GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = GameTexts.DEFAULT_FALLBACK;
                 return result;
             }
 
             if (!_db.RulesByVerb.TryGetValue(verbId, out List<Rule> rules) || rules.Count == 0)
             {
                 result.Outcome = ResolveOutcome.NoMatch;
-                result.Feedback = GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = GameTexts.DEFAULT_FALLBACK;
                 return result;
             }
 
@@ -72,18 +72,18 @@ namespace Hyperplasia.Core.Flow
                 if (r.TargetId != entityId) continue;
                 result.Rule = r;
                 result.Outcome = ResolveOutcome.TagFail;
-                result.Feedback = r.FeedbackFailTag ?? GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = r.FeedbackFailTag ?? GameTexts.DEFAULT_FALLBACK;
                 if (!e.HasTags(r.RequireTags)) continue;
                 result.Outcome = ResolveOutcome.InventoryFail;
-                result.Feedback = r.FeedbackFailInventory ?? GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = r.FeedbackFailInventory ?? GameTexts.DEFAULT_FALLBACK;
                 var hasInventoryItem = session.TryGetInventoryItem(r.RequireInventoryItem, out var ii);
                 if (r.RequireInventoryItem != -1 && !hasInventoryItem) continue;
                 result.Outcome = ResolveOutcome.InventoryTagFail;
-                result.Feedback = r.FeedbackFailInventoryTag ?? GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = r.FeedbackFailInventoryTag ?? GameTexts.DEFAULT_FALLBACK;
                 if (!string.IsNullOrEmpty(r.RequireInventoryItemTag) &&
                     (ii == null || !ii.HasTag(r.RequireInventoryItemTag))) continue;
                 result.Outcome = ResolveOutcome.Succeed;
-                result.Feedback = r.Feedback ?? GameConfig.DEFAULT_FALLBACK;
+                result.Feedback = r.Feedback ?? GameTexts.DEFAULT_FALLBACK;
                 Apply(r);
                 return result;
             }

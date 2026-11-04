@@ -1,4 +1,5 @@
 using System;
+using Hyperplasia.Core.Data;
 
 namespace Hyperplasia.Core.Flow.States
 {
@@ -8,7 +9,6 @@ namespace Hyperplasia.Core.Flow.States
     public sealed class StartState : IInputState
     {
         private const string StartWord = "start";
-        private const string StartHint = "输入START以开始";
 
         private readonly InputController _c;
 
@@ -46,7 +46,7 @@ namespace Hyperplasia.Core.Flow.States
                     {
                         // 输入不匹配：清空输入，让提示重新显示
                         _c.TyperEngine.Buffer.Clear();
-                        _c.TyperEngine.RaiseFeedback(StartHint);
+                        _c.TyperEngine.RaiseFeedback(GameTexts.START_HINT);
                     }
                     break;
                 case InputCommand.Backspace:

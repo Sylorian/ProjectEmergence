@@ -58,7 +58,7 @@ namespace Hyperplasia.Core.Flow.States
                     }
                     if (_c.TyperEngine.GetCandidates().Count > 0) Select(_selected);
                     else if (_c.TyperEngine.Buffer.IsEmpty) _c.TransitionTo(InputState.Explore);
-                    else _c.TyperEngine.RaiseFeedback("这行不通");
+                    else _c.TyperEngine.RaiseFeedback(GameTexts.NO_ACTION);
                     break;
                 case InputCommand.Cancel:
                     _c.TyperEngine.Buffer.Clear();
@@ -105,7 +105,7 @@ namespace Hyperplasia.Core.Flow.States
         {
             if (_c.TyperEngine.GetCandidates().Count == 0)
             {
-                _c.TyperEngine.RaiseFeedback("这行不通");
+                _c.TyperEngine.RaiseFeedback(GameTexts.NO_ACTION);
                 return;
             }
 
@@ -129,7 +129,7 @@ namespace Hyperplasia.Core.Flow.States
             }
             else
             {
-                _c.TyperEngine.RaiseFeedback("这行不通");
+                _c.TyperEngine.RaiseFeedback(GameTexts.NO_ACTION);
             }
         }
         private bool IsReachable(int id)
